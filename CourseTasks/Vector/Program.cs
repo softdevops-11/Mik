@@ -2,9 +2,9 @@
 
 namespace Vector
 {
-    class ProgramVector
+    internal class ProgramVector
     {
-        static void Main()
+        private static void Main()
         {
             double[] a = { 1.1, 2.1, 4, 7.5 };
             Vector vector1 = new Vector(a);

@@ -2,7 +2,7 @@
 
 namespace Vector
 {
-    class Vector
+    internal class Vector
     {
         private double[] vector;
 
@@ -13,11 +13,11 @@ namespace Vector
                 throw new ArgumentException("Размерность должна быть > 0");
             }
 
-            this.vector = new double[n];
+            vector = new double[n];
 
             for (int i = 0; i < n; i++)
             {
-                this.vector[i] = 0.0;
+                vector[i] = 0.0;
             }
         }
 
@@ -104,31 +104,31 @@ namespace Vector
 
         public double[] MultiplicateVector(double scalar)
         {
-            for (int i = 0; i < this.vector.Length; i++)
+            for (int i = 0; i < vector.Length; i++)
             {
-                this.vector[i] = this.vector[i] * scalar;
+                vector[i] = vector[i] * scalar;
             }
 
-            return this.vector;
+            return vector;
         }
 
         public double[] ReverseVector()
         {
-            for (int i = 0; i < this.vector.Length; i++)
+            for (int i = 0; i < vector.Length; i++)
             {
-                this.vector[i] = this.vector[i] * (-1);
+                vector[i] = vector[i] * (-1);
             }
 
-            return this.vector;
+            return vector;
         }
 
         public double GetLengthVector()
         {
             double lenghtVector = 0;
 
-            for (int i = 0; i < this.vector.Length; i++)
+            for (int i = 0; i < vector.Length; i++)
             {
-                lenghtVector = lenghtVector + Math.Pow(this.vector[i], 2);
+                lenghtVector = lenghtVector + Math.Pow(vector[i], 2);
             }
 
             return Math.Sqrt(lenghtVector);
@@ -136,12 +136,12 @@ namespace Vector
 
         public void SetVectorValue(int index, double value)
         {
-            this.vector[index] = value;
+            vector[index] = value;
         }
 
         public double GetVectorValue(int index)
         {
-            return this.vector[index];
+            return vector[index];
         }
 
         public override bool Equals(object component)
@@ -151,21 +151,23 @@ namespace Vector
                 return true;
             }
 
-            if (ReferenceEquals(component, null) || component.GetType() != this.GetType())
+            if (ReferenceEquals(component, null) || component.GetType() != GetType())
             {
                 return false;
             }
             Vector v = (Vector)component;
 
-            return this.vector == v.vector && this.vector.Length == v.vector.Length;
+            return vector == v.vector && vector.Length == v.vector.Length;
         }
 
         public override int GetHashCode()
         {
             int prime = 11;
             int hash = 1;
-            for (int i = 0; i < this.vector.Length; i++)
-            hash = prime * hash + this.vector[i].GetHashCode();
+            for (int i = 0; i < vector.Length; i++)
+            {
+                hash = prime * hash + vector[i].GetHashCode();
+            }
 
             return hash;
         }
