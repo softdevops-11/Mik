@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-namespace RangeComplex
+namespace ComplexRange
 {
-    internal class Range
+    public class Range
     {
         public double From { get; set; }
 
@@ -25,76 +25,77 @@ namespace RangeComplex
             return number >= From && number <= To;
         }
 
-        public Range Intersection(Range range)
+        public Range Intersect(Range range)
         {
             if (To > range.From && From < range.To)
             {
-                To = Math.Min(To, range.To);
-                From = Math.Max(From, range.From);
-
-                return this;
+                return new Range(Math.Max(From, range.From), Math.Min(To, range.To));
             }
 
-            To = From;
-
-            return this;
+            return null;
         }
 
-        public Range Union(Range range)
+        public Range[] Unite(Range range)
         {
             if (range.To >= From && range.From <= To)
             {
-                From = Math.Min(From, range.From);
-                To = Math.Max(To, range.To);
-                range.From = From;
-                range.To = To;
+                Range[] rangeOneUnion = new Range[1];
+                rangeOneUnion[0] = new Range(Math.Min(From, range.From), Math.Max(To, range.To));
+
+                return rangeOneUnion;
             }
 
-            return this;
+            Range[] rangeTwoUnion = new Range[2];
+            rangeTwoUnion[0] = new Range(From, To);
+            rangeTwoUnion[1] = new Range(range.From, range.To);
+
+            return rangeTwoUnion;
         }
 
-        public Range Difference(Range range)
+        public Range[] Subtract(Range range)
         {
             if (range.To > From && range.From < To)
             {
                 if (range.From > From && range.To < To)
                 {
-                    double temp = To;
-                    To = range.From;
-                    range.From = range.To;
-                    range.To = temp;
+                    Range[] rangeTwoDifference = new Range[2];
+                    rangeTwoDifference[0] = new Range(From, range.From);
+                    rangeTwoDifference[1] = new Range(range.To, To);
+
+                    return rangeTwoDifference;
                 }
                 else if (range.From > From || range.To < To)
                 {
+                    Range[] rangeOneDifference = new Range[1];
                     if (range.From > From)
                     {
-                        To = range.From;
-                        range.From = From;
-                        range.To = To;
+                        rangeOneDifference[0] = new Range(From, range.From);
+
+                        return rangeOneDifference;
                     }
                     else
                     {
-                        From = range.To;
-                        range.From = From;
-                        range.To = To;
+                        rangeOneDifference[0] = new Range(range.To, To);
+
+                        return rangeOneDifference;
                     }
                 }
             }
             else
             {
-                range.From = From;
-                range.To = To;
+                Range[] rangeOneDifference = new Range[1];
+                rangeOneDifference[0] = new Range(From, To);
+
+                return rangeOneDifference;
             }
 
-            return this;
+            return null;
         }
 
         public override string ToString()
         {
-            StringBuilder rangeString = new StringBuilder();
-            rangeString.AppendFormat("({0}; {1})", From, To);
-
-            return rangeString.ToString();
+            return string.Format("({0}; {1})", From, To);
         }
     }
 }
+

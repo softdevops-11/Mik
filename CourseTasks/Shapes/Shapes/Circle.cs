@@ -33,21 +33,22 @@ namespace Shapes
 
         public override string ToString()
         {
-            return "Окружность " + "радиуса " + radius;
+            return string.Format("Окружность радиуса {0}", radius);
         }
 
-        public override bool Equals(object item)
+        public override bool Equals(object o)
         {
-            if (ReferenceEquals(item, this))
+            if (ReferenceEquals(o, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(item, null) || item.GetType() != GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
             {
                 return false;
             }
-            Circle s = (Circle)item;
+
+            Circle s = (Circle)o;
 
             return radius == s.radius;
         }

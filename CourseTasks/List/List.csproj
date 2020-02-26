@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BCDFDC3B-3DA4-4E30-8637-F980DD981D76}</ProjectGuid>
+    <ProjectGuid>{633AF797-9C3E-4840-A336-3CD623F8154C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>CourseTasks</RootNamespace>
-    <AssemblyName>CourseTasks</AssemblyName>
+    <RootNamespace>List</RootNamespace>
+    <AssemblyName>List</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SinglyLinkedList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

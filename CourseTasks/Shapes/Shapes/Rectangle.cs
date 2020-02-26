@@ -1,4 +1,6 @@
-﻿namespace Shapes
+﻿using System;
+
+namespace Shapes
 {
     public class Rectangle : IShape
     {
@@ -7,8 +9,8 @@
 
         public Rectangle(double widthLength, double heightLength)
         {
-            width = widthLength;
-            height = heightLength;
+            this.width = widthLength;
+            this.height = heightLength;
         }
 
         public double GetWidth()
@@ -33,21 +35,22 @@
 
         public override string ToString()
         {
-            return "Прямоугольник " + "c длиной " + width + " и шириной " + height;
+            return string.Format("Прямоугольник c длиной {0} и шириной {1}", width, height);
         }
 
-        public override bool Equals(object item)
+        public override bool Equals(object o)
         {
-            if (ReferenceEquals(item, this))
+            if (ReferenceEquals(o, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(item, null) || item.GetType() != GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
             {
                 return false;
             }
-            Rectangle s = (Rectangle)item;
+
+            Rectangle s = (Rectangle)o;
 
             return width == s.width && height == s.height;
         }

@@ -1,14 +1,13 @@
 ﻿using System;
+using Vectors;
 
 namespace Matrix
 {
-    internal class ProgramMatrix
+    class ProgramMatrix
     {
-        private static void Main(string[] args)
+        static void Main(string[] args)
         {
             Matrix matrix1 = new Matrix(5, 6);
-
-            matrix1.GetSize();
 
             double[,] a = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
             double[,] b = { { 1, 2, 1, 1 }, { 2, 1, 3, 1 }, { 3, 1, 1, 4 }, { 4, 7, 1, 5 } };
@@ -20,19 +19,18 @@ namespace Matrix
             double[] vector3 = { 4, 2, 1 };
             double[] vector4 = { 6, 2, 1, 1 };
 
-            Vector[] vectorMassive = new Vector[4];
-            vectorMassive[0] = new Vector(vector1);
-            vectorMassive[1] = new Vector(vector2);
-            vectorMassive[2] = new Vector(vector3);
-            vectorMassive[3] = new Vector(vector4);
+            Vector[] vectorArray = new Vector[4];
+            vectorArray[0] = new Vector(vector1);
+            vectorArray[1] = new Vector(vector2);
+            vectorArray[2] = new Vector(vector3);
+            vectorArray[3] = new Vector(vector4);
 
-            Matrix matrix7 = new Matrix(vectorMassive);
+            Matrix matrix7 = new Matrix(vectorArray);
             Matrix matrix2 = new Matrix(a);
             Matrix matrix3 = new Matrix(b);
             Matrix matrix4 = new Matrix(c);
             Matrix matrix5 = new Matrix(f);
             Matrix matrix6 = new Matrix(matrix7);
-
             Console.WriteLine(matrix2);
 
             matrix2.SetVector(0, new Vector(vector));
@@ -51,9 +49,9 @@ namespace Matrix
             matrix2.Subtract(matrix4);
             Console.WriteLine("Разность матриц: {0}", matrix2);
             Console.WriteLine("Определитель матрицы: {0}", matrix3.GetDeterminant());
-            Console.WriteLine("Сумма матриц: {0}", Matrix.GetSumMatrix(matrix2, matrix4));
-            Console.WriteLine("Разность матриц: {0}", Matrix.GetDifferenceMatrix(matrix2, matrix4));
-            Console.WriteLine("Произведение матриц: {0}", Matrix.GetMultiplicatioMatrix(matrix2, matrix4));
+            Console.WriteLine("Сумма матриц: {0}", Matrix.GetMatrixSum(matrix2, matrix4));
+            Console.WriteLine("Разность матриц: {0}", Matrix.GetMatrixDifference(matrix2, matrix4));
+            Console.WriteLine("Произведение матриц: {0}", Matrix.GetMatrixMultiplication(matrix2, matrix4));
             Console.ReadLine();
         }
     }

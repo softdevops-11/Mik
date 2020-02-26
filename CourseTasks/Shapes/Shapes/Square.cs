@@ -1,4 +1,6 @@
-﻿namespace Shapes
+﻿using System;
+
+namespace Shapes
 {
     public class Square : IShape
     {
@@ -31,21 +33,22 @@
 
         public override string ToString()
         {
-            return "Квадрат " + "со стороной " + sideLength;
+            return string.Format("Квадрат со стороной {0}", sideLength);
         }
 
-        public override bool Equals(object item)
+        public override bool Equals(object o)
         {
-            if (ReferenceEquals(item, this))
+            if (ReferenceEquals(o, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(item, null) || item.GetType() != GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
             {
                 return false;
             }
-            Square s = (Square)item;
+
+            Square s = (Square)o;
 
             return sideLength == s.sideLength;
         }

@@ -1,165 +1,156 @@
 ﻿using System;
-
 using System.Text;
+using Vectors;
 
 namespace Matrix
 {
-    internal class Matrix
+    public class Matrix
     {
-        private Vector[] vector;
+        private Vector[] strings;
 
-        public Matrix(int dimension1, int dimension2)
+        public Matrix(int dimensionColumn, int dimensionRow)
         {
-            if (dimension1 <= 0 || dimension2 <= 0)
+            if (dimensionColumn <= 0 || dimensionRow <= 0)
             {
                 throw new ArgumentException("Размерность должна быть > 0");
             }
 
-            Array.Resize(ref vector, dimension1);
+            strings = new Vector[dimensionColumn];
 
-            for (int i = 0; i < dimension1; i++)
+            for (int i = 0; i < dimensionColumn; i++)
             {
-                vector[i] = new Vector(dimension2);
+                strings[i] = new Vector(dimensionRow);
             }
         }
 
         public Matrix(Matrix matrix)
         {
-            Array.Resize(ref vector, matrix.vector.Length);
-            Array.Copy(matrix.vector, vector, vector.Length);
+            int matrixDimensionColumn = matrix.GetDimensionColumn();
+            strings = new Vector[matrix.strings.Length];
+
+            for (int i = 0; i < matrixDimensionColumn; i++)
+            {
+                strings[i] = new Vector(matrix.strings[i]);
+            }
         }
 
-        public Matrix(double[,] massive)
+        public Matrix(double[,] array)
         {
-            if (massive.GetLength(0) <= 0 || massive.GetLength(1) <= 0)
+            if (array.GetLength(0) <= 0 || array.GetLength(1) <= 0)
             {
                 throw new ArgumentException("Размерность должна быть > 0");
             }
 
-            Array.Resize(ref vector, massive.GetLength(0));
+            strings = new Vector[array.GetLength(0)];
 
-            for (int i = 0; i < massive.GetLength(0); i++)
+            for (int i = 0; i < array.GetLength(0); i++)
             {
-                vector[i] = new Vector(massive.GetLength(1));
+                strings[i] = new Vector(array.GetLength(1));
 
-                for (int j = 0; j < massive.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    vector[i].SetElement(j, massive[i, j]);
+                    strings[i].SetElement(j, array[i, j]);
                 }
             }
         }
 
-        public Matrix(Vector[] vector)
+        public Matrix(Vector[] vectors)
         {
             int maxSize = 0;
 
-            for (int i = 0; i < vector.Length; i++)
+            foreach (Vector vector in vectors)
             {
-
-                if (maxSize < vector[i].GetSize())
+                if (maxSize < vector.GetSize())
                 {
-                    maxSize = vector[i].GetSize();
+                    maxSize = vector.GetSize();
                 }
             }
 
-            if (maxSize <= 0 || vector.Length <= 0)
+            if (maxSize <= 0 || vectors.Length <= 0)
             {
-                throw new ArgumentException("Размерность должна быть >0");
+                throw new ArgumentException("Размерность должна быть > 0");
             }
 
-            Array.Resize(ref this.vector, vector.Length);
+            strings = new Vector[vectors.Length];
 
-            for (int i = 0; i < vector.Length; i++)
+            for (int i = 0; i < vectors.Length; i++)
             {
-
-                this.vector[i] = new Vector(maxSize);
-
-                for (int j = 0; j < vector[i].GetSize(); j++)
-                {
-                    this.vector[i].SetElement(j, vector[i].GetElement(j));
-                }
+                strings[i] = new Vector(maxSize);
+                strings[i].Add(vectors[i]);
             }
         }
 
-        public int[] GetSize()
+        public int GetDimensionColumn()
         {
-            int[] matrixDimension = new int[2];
-            matrixDimension[0] = vector.Length;
-            matrixDimension[1] = vector[0].GetSize();
+            return strings.Length;
+        }
 
-            return matrixDimension;
+        public int GetDimensionRow()
+        {
+            return strings[0].GetSize();
         }
 
         public void SetVector(int index, Vector vector)
         {
-            if (index < 0 || index >= this.vector.Length)
+            if (index < 0 || index >= this.strings.Length)
             {
                 throw new ArgumentException("Индекс вне размеров матрицы");
             }
 
-            this.vector[index] = new Vector(vector);
+            this.strings[index] = new Vector(vector);
         }
 
         public Vector GetVector(int index)
         {
-            if (index < 0 || index >= vector.GetLength(0))
+            if (index < 0 || index >= this.strings.GetLength(0))
             {
                 throw new ArgumentException("Индекс вне размеров матрицы");
             }
 
-            return vector[index];
+            return new Vector(strings[index]);
         }
 
         public void Transpose()
         {
-            int[] matrixSize = GetSize();
+            int matrixDimensionColumn = GetDimensionColumn();
+            int matrixDimensionRow = GetDimensionRow();
 
-            Matrix transposeMatrix = new Matrix(matrixSize[1], matrixSize[0]);
-
-            for (int i = 0; i < matrixSize[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn; i++)
             {
-                for (int j = 0; j < matrixSize[1]; j++)
+                for (int j = i; j < matrixDimensionRow; j++)
                 {
-                    transposeMatrix.vector[j].SetElement(i, vector[i].GetElement(j));
+                    double temp = this.strings[j].GetElement(i);
+                    this.strings[j].SetElement(i, this.strings[i].GetElement(j));
+                    this.strings[i].SetElement(j, temp);
                 }
             }
-
-            vector = transposeMatrix.vector;
         }
 
         public void MultiplyOnScalar(double scalar)
         {
-            int[] matrixSize = GetSize();
-
-            for (int i = 0; i < matrixSize[0]; i++)
+            foreach (Vector vector in strings)
             {
-                vector[i].MultiplyOnScalar(scalar);
+                vector.MultiplyOnScalar(scalar);
             }
         }
 
         public Vector MultiplyOnVector(Vector vector)
         {
-            int[] matrixSize = GetSize();
+            int matrixDimensionColumn = GetDimensionColumn();
+            int matrixDimensionRow = GetDimensionRow();
+
             int vectorSize = vector.GetSize();
 
-            if (vectorSize != matrixSize[1])
+            if (vectorSize != matrixDimensionRow)
             {
                 throw new ArgumentException("Умножение невозможно");
             }
 
-            Vector result = new Vector(matrixSize[0]);
-            double temp = 0;
+            Vector result = new Vector(matrixDimensionColumn);
 
-            for (int i = 0; i < matrixSize[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn; i++)
             {
-                temp = 0;
-
-                for (int j = 0; j < matrixSize[1]; j++)
-                {
-                    temp += this.vector[i].GetElement(j) * vector.GetElement(j);
-                }
-
-                result.SetElement(i, temp);
+                result.SetElement(i, Vector.GetScalarMultiplication(strings[i], vector));
             }
 
             return result;
@@ -167,68 +158,68 @@ namespace Matrix
 
         public void Add(Matrix matrix)
         {
-            int[] matrixSize1 = GetSize();
-            int[] matrixSize2 = matrix.GetSize();
+            int matrixDimensionColumn1 = GetDimensionColumn();
+            int matrixDimensionRow1 = GetDimensionRow();
+            int matrixDimensionColumn2 = matrix.GetDimensionColumn();
+            int matrixDimensionRow2 = matrix.GetDimensionRow();
 
-            if (matrixSize1[0] != matrixSize2[0] || matrixSize1[1] != matrixSize2[1])
+            if (matrixDimensionColumn1 != matrixDimensionColumn2 || matrixDimensionRow1 != matrixDimensionRow2)
             {
                 throw new ArgumentException("Сложение невозможно");
             }
 
-            for (int i = 0; i < matrixSize1[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn1; i++)
             {
-                for (int j = 0; j < matrixSize1[1]; j++)
-                {
-                    vector[i].SetElement(j, vector[i].GetElement(j) + matrix.vector[i].GetElement(j));
-                }
+                strings[i].Add(matrix.strings[i]);
             }
         }
 
         public void Subtract(Matrix matrix)
         {
-            int[] matrixSize1 = GetSize();
-            int[] matrixSize2 = matrix.GetSize();
+            int matrixDimensionColumn1 = GetDimensionColumn();
+            int matrixDimensionRow1 = GetDimensionRow();
+            int matrixDimensionColumn2 = matrix.GetDimensionColumn();
+            int matrixDimensionRow2 = matrix.GetDimensionRow();
 
-            if (matrixSize1[0] != matrixSize2[0] || matrixSize1[1] != matrixSize2[1])
+
+            if (matrixDimensionColumn1 != matrixDimensionColumn2 || matrixDimensionRow1 != matrixDimensionRow2)
             {
                 throw new ArgumentException("Вычитание невозможно");
             }
 
-            for (int i = 0; i < matrixSize1[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn1; i++)
             {
-                for (int j = 0; j < matrixSize1[1]; j++)
-                {
-                    vector[i].SetElement(j, vector[i].GetElement(j) - matrix.vector[i].GetElement(j));
-                }
+                strings[i].Subtract(matrix.strings[i]);
             }
         }
 
         public double GetDeterminant()
         {
-            int[] matrixSize = GetSize();
+            int matrixDimensionColumn1 = GetDimensionColumn();
+            int matrixDimensionRow1 = GetDimensionRow();
 
-            if (matrixSize[0] != matrixSize[1])
+            if (matrixDimensionColumn1 != matrixDimensionRow1)
             {
                 throw new ArgumentException("Вычислить определитель невожможно");
             }
 
             double epsilon = 1E-9;
             double temp;
-            Matrix determinantMatrix = new Matrix(vector);
+            Matrix determinantMatrix = new Matrix(this.strings);
 
-            for (int k = 1; k < matrixSize[0]; k++)
+            for (int k = 1; k < matrixDimensionColumn1; k++)
             {
-                if (Math.Abs(determinantMatrix.vector[k - 1].GetElement(k - 1) - 0.0) < epsilon)
+                if (Math.Abs(determinantMatrix.strings[k - 1].GetElement(k - 1) - 0.0) < epsilon)
                 {
-                    for (int i = k - 1; i < matrixSize[0]; i++)
+                    for (int i = k - 1; i < matrixDimensionColumn1; i++)
                     {
-                        if (Math.Abs(determinantMatrix.vector[i].GetElement(k - 1) - 0.0) > epsilon)
+                        if (Math.Abs(determinantMatrix.strings[i].GetElement(k - 1) - 0.0) > epsilon)
                         {
-                            for (int j = k - 1; j < matrixSize[0]; j++)
+                            for (int j = k - 1; j < matrixDimensionColumn1; j++)
                             {
-                                temp = determinantMatrix.vector[k - 1].GetElement(j);
-                                determinantMatrix.vector[k - 1].SetElement(j, determinantMatrix.vector[i].GetElement(j));
-                                determinantMatrix.vector[i].SetElement(j, temp);
+                                temp = determinantMatrix.strings[k - 1].GetElement(j);
+                                determinantMatrix.strings[k - 1].SetElement(j, determinantMatrix.strings[i].GetElement(j));
+                                determinantMatrix.strings[i].SetElement(j, temp);
                             }
 
                             break;
@@ -236,15 +227,15 @@ namespace Matrix
                     }
                 }
 
-                if (Math.Abs(determinantMatrix.vector[k].GetElement(k) - 0.0) > epsilon)
+                if (Math.Abs(determinantMatrix.strings[k].GetElement(k) - 0.0) > epsilon)
                 {
-                    for (int j = k; j < matrixSize[0]; j++)
+                    for (int j = k; j < matrixDimensionColumn1; j++)
                     {
-                        for (int i = k; i < matrixSize[0]; i++)
+                        for (int i = k; i < matrixDimensionColumn1; i++)
                         {
-                            temp = determinantMatrix.vector[j].GetElement(i) - determinantMatrix.vector[k - 1].GetElement(i)
-                            * determinantMatrix.vector[j].GetElement(k - 1) / determinantMatrix.vector[k - 1].GetElement(k - 1);
-                            determinantMatrix.vector[j].SetElement(i, temp);
+                            temp = determinantMatrix.strings[j].GetElement(i) - determinantMatrix.strings[k - 1].GetElement(i)
+                            * determinantMatrix.strings[j].GetElement(k - 1) / determinantMatrix.strings[k - 1].GetElement(k - 1);
+                            determinantMatrix.strings[j].SetElement(i, temp);
                         }
                     }
                 }
@@ -252,9 +243,9 @@ namespace Matrix
 
             double determinant = 1;
 
-            for (int i = 0; i < matrixSize[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn1; i++)
             {
-                determinant *= determinantMatrix.vector[i].GetElement(i);
+                determinant *= determinantMatrix.strings[i].GetElement(i);
             }
 
             return determinant;
@@ -262,21 +253,11 @@ namespace Matrix
 
         public override string ToString()
         {
-
-            int[] matrixSize = GetSize();
             StringBuilder matrixString = new StringBuilder("{");
 
-            for (int i = 0; i < matrixSize[0]; i++)
+            foreach (Vector vector in strings)
             {
-                matrixString.Append("{");
-
-                for (int j = 0; j < matrixSize[1]; j++)
-                {
-                    matrixString.AppendFormat("{0}, ", vector[i].GetElement(j).ToString());
-                }
-
-                matrixString = matrixString.Remove(matrixString.Length - 2, 2);
-                matrixString.Append("}, ");
+                matrixString.AppendFormat("{0}, ", vector.ToString());
             }
 
             matrixString = matrixString.Remove(matrixString.Length - 2, 2);
@@ -285,17 +266,19 @@ namespace Matrix
             return matrixString.ToString();
         }
 
-        public static Matrix GetSumMatrix(Matrix matrix1, Matrix matrix2)
+        public static Matrix GetMatrixSum(Matrix matrix1, Matrix matrix2)
         {
-            int[] matrixSize1 = matrix1.GetSize();
-            int[] matrixSize2 = matrix2.GetSize();
+            int matrixDimensionColumn1 = matrix1.GetDimensionColumn();
+            int matrixDimensionRow1 = matrix1.GetDimensionRow();
+            int matrixDimensionColumn2 = matrix2.GetDimensionColumn();
+            int matrixDimensionRow2 = matrix2.GetDimensionRow();
 
-            if (matrixSize1[0] != matrixSize2[0] || matrixSize1[1] != matrixSize2[1])
+            if (matrixDimensionColumn1 != matrixDimensionColumn2 || matrixDimensionRow1 != matrixDimensionRow2)
             {
                 throw new ArgumentException("Сложение невозможно");
             }
 
-            Matrix resultMatrix = new Matrix(matrixSize1[0], matrixSize1[1]);
+            Matrix resultMatrix = new Matrix(matrixDimensionColumn1, matrixDimensionRow1);
 
             resultMatrix.Add(matrix1);
             resultMatrix.Add(matrix2);
@@ -303,50 +286,52 @@ namespace Matrix
             return resultMatrix;
         }
 
-        public static Matrix GetDifferenceMatrix(Matrix matrix1, Matrix matrix2)
+        public static Matrix GetMatrixDifference(Matrix matrix1, Matrix matrix2)
         {
-            int[] matrixSize1 = matrix1.GetSize();
-            int[] matrixSize2 = matrix2.GetSize();
+            int matrixDimensionColumn1 = matrix1.GetDimensionColumn();
+            int matrixDimensionRow1 = matrix1.GetDimensionRow();
+            int matrixDimensionColumn2 = matrix2.GetDimensionColumn();
+            int matrixDimensionRow2 = matrix2.GetDimensionRow();
 
-            if (matrixSize1[0] != matrixSize2[0] || matrixSize1[1] != matrixSize2[1])
+            if (matrixDimensionColumn1 != matrixDimensionColumn2 || matrixDimensionRow1 != matrixDimensionRow2)
             {
                 throw new ArgumentException("Вычитание невозможно");
             }
 
-            Matrix resultMatrix = new Matrix(matrixSize1[0], matrixSize1[1]);
+            Matrix resultMatrix = new Matrix(matrixDimensionColumn1, matrixDimensionRow1);
 
-            resultMatrix.Subtract(matrix1);
+            resultMatrix.Add(matrix1);
             resultMatrix.Subtract(matrix2);
 
             return resultMatrix;
         }
 
-        public static Matrix GetMultiplicatioMatrix(Matrix matrix1, Matrix matrix2)
+        public static Matrix GetMatrixMultiplication(Matrix matrix1, Matrix matrix2)
         {
-            int[] matrixSize1 = matrix1.GetSize();
-            int[] matrixSize2 = matrix2.GetSize();
+            int matrixDimensionColumn1 = matrix1.GetDimensionColumn();
+            int matrixDimensionRow1 = matrix1.GetDimensionRow();
+            int matrixDimensionColumn2 = matrix2.GetDimensionColumn();
+            int matrixDimensionRow2 = matrix2.GetDimensionRow();
 
-            if (matrixSize1[1] != matrixSize2[0])
+            if (matrixDimensionRow1 != matrixDimensionColumn2)
             {
                 throw new ArgumentException("Умножение невозможно");
             }
 
-            Matrix resultMatrix = new Matrix(matrixSize1[1], matrixSize2[0]);
+            Matrix resultMatrix = new Matrix(matrixDimensionRow1, matrixDimensionColumn2);
 
-            double temp = 0;
-
-            for (int i = 0; i < matrixSize1[0]; i++)
+            for (int i = 0; i < matrixDimensionColumn1; i++)
             {
-                for (int j = 0; j < matrixSize2[1]; j++)
+                for (int j = 0; j < matrixDimensionRow2; j++)
                 {
-                    temp = 0;
+                    double temp = 0;
 
-                    for (int k = 0; k < matrixSize1[1]; k++)
+                    for (int k = 0; k < matrixDimensionRow1; k++)
                     {
-                        temp = temp + matrix1.vector[i].GetElement(k) * matrix2.vector[k].GetElement(j);
+                        temp += matrix1.strings[i].GetElement(k) * matrix2.strings[k].GetElement(j);
                     }
 
-                    resultMatrix.vector[i].SetElement(j, temp);
+                    resultMatrix.strings[i].SetElement(j, temp);
                 }
             }
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-namespace RangeComplex
+namespace ComplexRange
 {
-    internal class RangeMain
+    class RangeMain
     {
         public static void Main()
         {
@@ -37,12 +37,11 @@ namespace RangeComplex
             double to2 = Convert.ToDouble(Console.ReadLine());
             Range range2 = new Range(from2, to2);
 
-            range1.Intersection(range2);
-            double epsilon = 1E-9;
+            Range rangeIntersection = range1.Intersect(range2);
 
-            if (Math.Abs(range1.To - range1.From) > epsilon)
+            if (rangeIntersection != null)
             {
-                Console.WriteLine("Интервал пересечения: [{0}]", range1);
+                Console.WriteLine("Интервал пересечения: [{0}]", rangeIntersection);
             }
             else
             {
@@ -52,43 +51,37 @@ namespace RangeComplex
             Range range3 = new Range(1, 2);
             Range range4 = new Range(3, 5);
 
-            range3.Union(range4);
-            StringBuilder unionString = new StringBuilder("Объединение интервалов дает интервал: [");
+            Range[] rangeUnion = range3.Unite(range4);
+            StringBuilder unionString = new StringBuilder("Объединение интервалов дает интервал: ");
 
-            if (Math.Abs(range3.From - range4.From) <= epsilon && Math.Abs(range3.To - range4.To) <= epsilon)
+            for (int i = 0; i < rangeUnion.Length; i++)
             {
-                unionString.AppendFormat("{0}]", range3);
-            }
-            else
-            {
-                unionString.AppendFormat("{0}, {1}]", range3, range4);
+                unionString.AppendFormat("[{0}], ", rangeUnion[i]);
             }
 
+            unionString = unionString.Remove(unionString.Length - 2, 2);
             Console.WriteLine(unionString.ToString());
 
-            Range range5 = new Range(2, 5);
-            Range range6 = new Range(3, 4);
+            Range range5 = new Range(2, 7);
+            Range range6 = new Range(1, 8);
 
-            range5.Difference(range6);
-            StringBuilder differenceString = new StringBuilder("Разность интервалов дает интервал: [");
+            Range[] rangeDifference = range5.Subtract(range6);
+            StringBuilder differenceString = new StringBuilder("Разность интервалов дает интервал: ");
 
-            if (Math.Abs(range5.From - range6.From) <= epsilon && Math.Abs(range5.To - range6.To) <= epsilon)
+            if (rangeDifference != null)
             {
-                if (Math.Abs(range5.To - range5.From) > epsilon)
+                for (int i = 0; i < rangeDifference.Length; i++)
                 {
-                    differenceString.AppendFormat("{0}]", range5);
+                    differenceString.AppendFormat("[{0}], ", rangeDifference[i]);
                 }
-                else
-                {
-                    differenceString.Append("]");
-                }
+
+                differenceString = differenceString.Remove(differenceString.Length - 2, 2);
+                Console.WriteLine(differenceString.ToString());
             }
             else
             {
-                differenceString.AppendFormat("{0}, {1}]", range5, range6);
+                Console.WriteLine("Разность интервалов дает интервал: []");
             }
-
-            Console.Write(differenceString.ToString());
 
             Console.ReadKey();
         }

@@ -1,10 +1,13 @@
-﻿namespace RangeMain
-{
-    internal class Range
-    {
-        public double From { get; private set; }
+﻿using System;
+using System.Text;
 
-        public double To { get; private set; }
+namespace ComplexRange
+{
+    public class Range
+    {
+        public double From { get; set; }
+
+        public double To { get; set; }
 
         public Range(double from, double to)
         {
@@ -22,122 +25,77 @@
             return number >= From && number <= To;
         }
 
-        public static Range RangesIntersection(Range intervalOne, Range intervalTwo)
+        public Range Intersect(Range range)
         {
-            double intersectionFrom = 0;
-            double intersectionTo = 0;
-
-            if (intervalTwo.To >= intervalOne.From && intervalTwo.From <= intervalOne.To)
+            if (To > range.From && From < range.To)
             {
-                if (intervalOne.From >= intervalTwo.From)
-                {
-                    intersectionFrom = intervalOne.From;
-                }
-                else
-                {
-                    intersectionFrom = intervalTwo.From;
-                }
-
-                if (intervalOne.To <= intervalTwo.To)
-                {
-                    intersectionTo = intervalOne.To;
-                }
-                else
-                {
-                    intersectionTo = intervalTwo.To;
-                }
-
-                return new Range(intersectionFrom, intersectionTo);
+                return new Range(Math.Max(From, range.From), Math.Min(To, range.To));
             }
 
             return null;
         }
 
-        public static Range[] RangesUnion(Range intervalOne, Range intervalTwo)
+        public Range[] Unite(Range range)
         {
-            double[] unionFrom = new double[2];
-            double[] unionTo = new double[2];
-            Range[] rangesUnion = new Range[2];
-
-            if (intervalTwo.To >= intervalOne.From && intervalTwo.From <= intervalOne.To)
+            if (range.To >= From && range.From <= To)
             {
-                if (intervalOne.From >= intervalTwo.From)
-                {
-                    unionFrom[0] = intervalTwo.From;
-                }
-                else
-                {
-                    unionFrom[0] = intervalOne.From;
-                }
+                Range[] rangeOneUnion = new Range[1];
+                rangeOneUnion[0] = new Range(Math.Min(From, range.From), Math.Max(To, range.To));
 
-                if (intervalOne.To <= intervalTwo.To)
-                {
-                    unionTo[0] = intervalTwo.To;
-                }
-                else
-                {
-                    unionTo[0] = intervalOne.To;
-                }
-
-                rangesUnion[0] = new Range(unionFrom[0], unionTo[0]);
-
-                return rangesUnion;
+                return rangeOneUnion;
             }
-            unionFrom[0] = intervalOne.From;
-            unionTo[0] = intervalOne.To;
-            unionFrom[1] = intervalTwo.From;
-            unionTo[1] = intervalTwo.To;
 
-            rangesUnion[0] = new Range(unionFrom[0], unionTo[0]);
-            rangesUnion[1] = new Range(unionFrom[1], unionTo[1]);
+            Range[] rangeTwoUnion = new Range[2];
+            rangeTwoUnion[0] = new Range(From, To);
+            rangeTwoUnion[1] = new Range(range.From, range.To);
 
-            return rangesUnion;
+            return rangeTwoUnion;
         }
 
-        public static Range[] RangesDifference(Range intervalOne, Range intervalTwo)
+        public Range[] Subtract(Range range)
         {
-            double[] differenceFrom = new double[2];
-            double[] differenceTo = new double[2];
-
-            Range[] rangesDifference = new Range[2];
-
-            if (intervalTwo.To >= intervalOne.From && intervalTwo.From <= intervalOne.To)
+            if (range.To > From && range.From < To)
             {
-                if (intervalTwo.From > intervalOne.From && intervalTwo.To < intervalOne.To)
+                if (range.From > From && range.To < To)
                 {
-                    differenceFrom[0] = intervalOne.From;
-                    differenceTo[0] = intervalTwo.From;
-                    differenceFrom[1] = intervalTwo.To;
-                    differenceTo[1] = intervalOne.To;
+                    Range[] rangeTwoDifference = new Range[2];
+                    rangeTwoDifference[0] = new Range(From, range.From);
+                    rangeTwoDifference[1] = new Range(range.To, To);
 
-                    rangesDifference[0] = new Range(differenceFrom[0], differenceTo[0]);
-                    rangesDifference[1] = new Range(differenceFrom[1], differenceTo[1]);
+                    return rangeTwoDifference;
                 }
-                else if (intervalTwo.From > intervalOne.From || intervalTwo.To < intervalOne.To)
+                else if (range.From > From || range.To < To)
                 {
-                    if (intervalTwo.From > intervalOne.From)
+                    Range[] rangeOneDifference = new Range[1];
+                    if (range.From > From)
                     {
-                        differenceFrom[0] = intervalOne.From;
-                        differenceTo[0] = intervalTwo.From;
-                        rangesDifference[0] = new Range(differenceFrom[0], differenceTo[0]);
+                        rangeOneDifference[0] = new Range(From, range.From);
+
+                        return rangeOneDifference;
                     }
                     else
                     {
-                        differenceFrom[0] = intervalTwo.To;
-                        differenceTo[0] = intervalOne.To;
-                        rangesDifference[0] = new Range(differenceFrom[0], differenceTo[0]);
+                        rangeOneDifference[0] = new Range(range.To, To);
+
+                        return rangeOneDifference;
                     }
                 }
             }
-            else if (!(intervalTwo.To >= intervalOne.From && intervalTwo.From <= intervalOne.To))
+            else
             {
-                differenceFrom[0] = intervalOne.From;
-                differenceTo[0] = intervalOne.To;
-                rangesDifference[0] = new Range(differenceFrom[0], differenceTo[0]);
+                Range[] rangeOneDifference = new Range[1];
+                rangeOneDifference[0] = new Range(From, To);
+
+                return rangeOneDifference;
             }
 
-            return rangesDifference;
+            return null;
         }
 
+        public override string ToString()
+        {
+            return string.Format("({0}; {1})", From, To);
+        }
     }
 }
+

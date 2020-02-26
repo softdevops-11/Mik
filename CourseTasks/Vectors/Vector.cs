@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
+using System.Linq;
 
-namespace Matrix
+namespace Vectors
 {
-    internal class Vector
+    public class Vector
     {
         private double[] value;
 
@@ -55,7 +55,7 @@ namespace Matrix
         {
             StringBuilder vectorString = new StringBuilder("{");
 
-            foreach (double value in value)
+            foreach (double value in this.value)
             {
                 vectorString.AppendFormat("{0}, ", value);
             }
@@ -104,7 +104,7 @@ namespace Matrix
         {
             for (int i = 0; i < value.Length; i++)
             {
-                value[i] *= -1;
+                value[i] *= (-1);
             }
         }
 
@@ -130,19 +130,19 @@ namespace Matrix
             return value[index];
         }
 
-        public override bool Equals(object component)
+        public override bool Equals(object o)
         {
-            if (ReferenceEquals(component, this))
+            if (ReferenceEquals(o, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(component, null) || component.GetType() != GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
             {
                 return false;
             }
 
-            Vector v = (Vector)component;
+            Vector v = (Vector)o;
 
             return value.SequenceEqual(v.value) && value.Length == v.value.Length;
         }
@@ -152,7 +152,7 @@ namespace Matrix
             int prime = 11;
             int hash = 1;
 
-            foreach (double value in value)
+            foreach (double value in this.value)
             {
                 hash = prime * hash + value.GetHashCode();
             }

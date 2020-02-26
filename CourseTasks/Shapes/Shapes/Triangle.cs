@@ -36,7 +36,7 @@ namespace Shapes
             return 0.5 * Math.Abs((x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3));
         }
 
-        private double GetSideLength(double x1, double y1, double x2, double y2)
+        private static double GetSideLength(double x1, double y1, double x2, double y2)
         {
             return Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
         }
@@ -48,21 +48,22 @@ namespace Shapes
 
         public override string ToString()
         {
-            return "Треугольник с вершинами в точках: (" + x1 + "," + y1 + "), (" + x2 + "," + y2 + "), (" + x3 + "," + y3 + ")";
+            return string.Format("Треугольник с вершинами в точках: ({0}, {1}), ({2}, {3}), ({4}, {5})", x1, y1, x2, y2, x3, y3);
         }
 
-        public override bool Equals(object item)
+        public override bool Equals(object o)
         {
-            if (ReferenceEquals(item, this))
+            if (ReferenceEquals(o, this))
             {
                 return true;
             }
 
-            if (ReferenceEquals(item, null) || item.GetType() != GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
             {
                 return false;
             }
-            Triangle s = (Triangle)item;
+
+            Triangle s = (Triangle)o;
 
             return x1 == s.x1 && x2 == s.x2 && x3 == s.x3 && y1 == s.y1 && y2 == s.y2 && y3 == s.y3;
         }

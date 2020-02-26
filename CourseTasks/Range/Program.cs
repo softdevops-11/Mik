@@ -1,23 +1,24 @@
 ﻿using System;
+using System.Text;
 
-namespace RangeMain
+namespace ComplexRange
 {
-    internal class RangeMain
+    class RangeMain
     {
         public static void Main()
         {
             Console.WriteLine("Введите концы диапазона: ");
             double from = Convert.ToDouble(Console.ReadLine());
             double to = Convert.ToDouble(Console.ReadLine());
-            Range interval = new Range(from, to);
+            Range range = new Range(from, to);
 
-            double intervalLength = interval.GetLength();
-            Console.WriteLine("Длина интервала равна {0}. ", intervalLength);
+            double rangeLength = range.GetLength();
+            Console.WriteLine("Длина интервала равна {0}. ", rangeLength);
             Console.WriteLine("Введите число:");
 
             double number = Convert.ToDouble(Console.ReadLine());
 
-            if (interval.IsInside(number))
+            if (range.IsInside(number))
             {
                 Console.WriteLine("Число лежит в интервале. ");
             }
@@ -27,47 +28,59 @@ namespace RangeMain
             }
 
             Console.WriteLine("Введите концы первого диапазона: ");
-            double fromOne = Convert.ToDouble(Console.ReadLine());
-            double toOne = Convert.ToDouble(Console.ReadLine());
-            Range intervalOne = new Range(fromOne, toOne);
+            double from1 = Convert.ToDouble(Console.ReadLine());
+            double to1 = Convert.ToDouble(Console.ReadLine());
+            Range range1 = new Range(from1, to1);
 
             Console.WriteLine("Введите концы второго диапазона: ");
-            double fromTwo = Convert.ToDouble(Console.ReadLine());
-            double toTwo = Convert.ToDouble(Console.ReadLine());
-            Range intervalTwo = new Range(fromTwo, toTwo);
+            double from2 = Convert.ToDouble(Console.ReadLine());
+            double to2 = Convert.ToDouble(Console.ReadLine());
+            Range range2 = new Range(from2, to2);
 
-            Range intervalIntersection = Range.RangesIntersection(intervalOne, intervalTwo);
+            Range rangeIntersection = range1.Intersect(range2);
 
-            if (intervalIntersection != null)
+            if (rangeIntersection != null)
             {
-                Console.WriteLine("Интервал пересечения [{0},{1}]. ", intervalIntersection.From, intervalIntersection.To);
+                Console.WriteLine("Интервал пересечения: [{0}]", rangeIntersection);
             }
             else
             {
-                Console.WriteLine("Интервал пересечения null.");
+                Console.WriteLine("Интервал пересечения: []");
             }
 
-            Range[] intervalUnion = Range.RangesUnion(intervalOne, intervalTwo);
-            Console.Write("Объединение интервалов дает интервал: ");
+            Range range3 = new Range(1, 2);
+            Range range4 = new Range(3, 5);
 
-            for (int i = 0; i < 2; i++)
+            Range[] rangeUnion = range3.Unite(range4);
+            StringBuilder unionString = new StringBuilder("Объединение интервалов дает интервал: ");
+
+            for (int i = 0; i < rangeUnion.Length; i++)
             {
-                if (intervalUnion[i] != null)
-                {
-                    Console.Write(" [{0},{1}] ", intervalUnion[i].From, intervalUnion[i].To);
-                }
+                unionString.AppendFormat("[{0}], ", rangeUnion[i]);
             }
 
-            Console.WriteLine();
-            Range[] intervalDifference = Range.RangesDifference(intervalOne, intervalTwo);
-            Console.Write("Разность интервалов дает интервал: ");
+            unionString = unionString.Remove(unionString.Length - 2, 2);
+            Console.WriteLine(unionString.ToString());
 
-            for (int i = 0; i < 2; i++)
+            Range range5 = new Range(2, 7);
+            Range range6 = new Range(1, 8);
+
+            Range[] rangeDifference = range5.Subtract(range6);
+            StringBuilder differenceString = new StringBuilder("Разность интервалов дает интервал: ");
+
+            if (rangeDifference != null)
             {
-                if (intervalDifference[i] != null)
+                for (int i = 0; i < rangeDifference.Length; i++)
                 {
-                    Console.Write(" [{0},{1}] ", intervalDifference[i].From, intervalDifference[i].To);
+                    differenceString.AppendFormat("[{0}], ", rangeDifference[i]);
                 }
+
+                differenceString = differenceString.Remove(differenceString.Length - 2, 2);
+                Console.WriteLine(differenceString.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Разность интервалов дает интервал: []");
             }
 
             Console.ReadKey();
