@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Text;
 
-namespace ComplexRange
+namespace Range
 {
     public class Range
     {
@@ -25,7 +24,7 @@ namespace ComplexRange
             return number >= From && number <= To;
         }
 
-        public Range Intersect(Range range)
+        public Range GetIntersection(Range range)
         {
             if (To > range.From && From < range.To)
             {
@@ -35,61 +34,38 @@ namespace ComplexRange
             return null;
         }
 
-        public Range[] Unite(Range range)
+        public Range[] GetUnion(Range range)
         {
             if (range.To >= From && range.From <= To)
             {
-                Range[] rangeOneUnion = new Range[1];
-                rangeOneUnion[0] = new Range(Math.Min(From, range.From), Math.Max(To, range.To));
-
-                return rangeOneUnion;
+                return new Range[] { new Range(Math.Min(From, range.From), Math.Max(To, range.To)) };
             }
 
-            Range[] rangeTwoUnion = new Range[2];
-            rangeTwoUnion[0] = new Range(From, To);
-            rangeTwoUnion[1] = new Range(range.From, range.To);
-
-            return rangeTwoUnion;
+            return new Range[] { new Range(From, To), new Range(range.From, range.To) };
         }
 
-        public Range[] Subtract(Range range)
+        public Range[] GetSubtraction(Range range)
         {
-            if (range.To > From && range.From < To)
+            if (!(range.To > From && range.From < To))
             {
-                if (range.From > From && range.To < To)
-                {
-                    Range[] rangeTwoDifference = new Range[2];
-                    rangeTwoDifference[0] = new Range(From, range.From);
-                    rangeTwoDifference[1] = new Range(range.To, To);
-
-                    return rangeTwoDifference;
-                }
-                else if (range.From > From || range.To < To)
-                {
-                    Range[] rangeOneDifference = new Range[1];
-                    if (range.From > From)
-                    {
-                        rangeOneDifference[0] = new Range(From, range.From);
-
-                        return rangeOneDifference;
-                    }
-                    else
-                    {
-                        rangeOneDifference[0] = new Range(range.To, To);
-
-                        return rangeOneDifference;
-                    }
-                }
-            }
-            else
-            {
-                Range[] rangeOneDifference = new Range[1];
-                rangeOneDifference[0] = new Range(From, To);
-
-                return rangeOneDifference;
+                return new Range[] { new Range(From, To) };
             }
 
-            return null;
+            if (range.From > From && range.To < To)
+            {
+                return new Range[] { new Range(From, range.From), new Range(range.To, To) };
+            }
+            else if (range.From > From || range.To < To)
+            {
+                if (range.From > From)
+                {
+                    return new Range[] { new Range(From, range.From) };
+                }
+
+                return new Range[] { new Range(range.To, To) };
+            }
+
+            return new Range[] { };
         }
 
         public override string ToString()
@@ -98,4 +74,3 @@ namespace ComplexRange
         }
     }
 }
-

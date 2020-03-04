@@ -2,7 +2,7 @@
 
 namespace Vectors
 {
-    class Vectors
+    class ProgramVector
     {
         static void Main()
         {
@@ -32,7 +32,7 @@ namespace Vectors
             vector2.Subtract(vector1);
             Console.WriteLine("Вычитание от вектора vector2 вектора vector1: {0}", vector2);
 
-            vector2.MultiplyOnScalar(3);
+            vector2.MultiplyByScalar(3);
             Console.WriteLine("Умножение вектора vector2 на скаляр: {0}", vector2);
 
             vector2.Reverse();
@@ -42,8 +42,8 @@ namespace Vectors
             Console.WriteLine("Хэш код вектора vector1: {0}", vector1.GetHashCode());
             Console.WriteLine(vector1);
             Console.WriteLine(vector2);
-            Console.WriteLine("Суммирование вектора vector2 и вектора vector1: {0}", Vector.GetSumVector(vector1, vector2));
-            Console.WriteLine("Вычитание вектора vector1 и вектора vector2: {0}", Vector.GetDifferenceVector(vector1, vector2));
+            Console.WriteLine("Суммирование вектора vector2 и вектора vector1: {0}", Vector.GetSum(vector1, vector2));
+            Console.WriteLine("Вычитание вектора vector1 и вектора vector2: {0}", Vector.GetDifference(vector1, vector2));
             Console.WriteLine("Умножение вектора vector2 и вектора vector1: {0}", Vector.GetScalarMultiplication(vector1, vector2));
 
             Console.ReadLine();
@@ -52,4 +52,3 @@ namespace Vectors
         }
     }
 }
-

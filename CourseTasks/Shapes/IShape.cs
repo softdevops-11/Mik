@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Shapes
+﻿namespace Shapes
 {
     public interface IShape
     {

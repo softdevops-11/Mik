@@ -1,16 +1,14 @@
-﻿using System;
-
-namespace Shapes
+﻿namespace Shapes.BasicShapes
 {
     public class Rectangle : IShape
     {
         private readonly double width;
         private readonly double height;
 
-        public Rectangle(double widthLength, double heightLength)
+        public Rectangle(double width, double height)
         {
-            this.width = widthLength;
-            this.height = heightLength;
+            this.width = width;
+            this.height = height;
         }
 
         public double GetWidth()
@@ -45,7 +43,7 @@ namespace Shapes
                 return true;
             }
 
-            if (ReferenceEquals(o, null) || o.GetType() != this.GetType())
+            if (ReferenceEquals(o, null) || o.GetType() != GetType())
             {
                 return false;
             }
