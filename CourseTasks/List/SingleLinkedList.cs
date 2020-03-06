@@ -2,18 +2,12 @@
 
 namespace List
 {
-    class SingleLinkedList<T>
+    internal class SingleLinkedList<T>
     {
         private int Length { get; set; }
         private ListNode<T> head;
 
-        public ListNode<T> Head
-        {
-            get
-            {
-                return head;
-            }
-        }
+        public ListNode<T> Head => head;
 
         public T GetHeadData()
         {
@@ -46,11 +40,11 @@ namespace List
         {
             if (index >= Length || index < 0)
             {
-                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до " 
+                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до "
                 + Length + " , сейчас он равен" + index);
             }
 
-            ListNode<T> node = this.FindNodeByIndex(index);
+            ListNode<T> node = FindNodeByIndex(index);
 
             return node.Data;
         }
@@ -63,7 +57,7 @@ namespace List
                 + Length + " , сейчас он равен" + index);
             }
 
-            ListNode<T> node = this.FindNodeByIndex(index);
+            ListNode<T> node = FindNodeByIndex(index);
             T temp = node.Data;
             node.Data = data;
 

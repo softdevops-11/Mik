@@ -2,9 +2,9 @@
 
 namespace List
 {
-    class ProgramList
+    internal class ProgramList
     {
-        static void Main()
+        private static void Main()
         {
             SingleLinkedList<int> list = new SingleLinkedList<int>();
 
