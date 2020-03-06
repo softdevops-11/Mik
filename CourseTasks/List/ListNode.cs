@@ -1,6 +1,6 @@
 ﻿namespace List
 {
-    internal class ListNode<T>
+    class ListNode<T>
     {
         public T Data { get; set; }
 

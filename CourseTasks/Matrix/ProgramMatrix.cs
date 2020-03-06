@@ -3,9 +3,9 @@ using Vectors;
 
 namespace Matrix
 {
-    class ProgramMatrix
+    internal class ProgramMatrix
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Matrix matrix1 = new Matrix(5, 6);
 
@@ -34,7 +34,7 @@ namespace Matrix
             Console.WriteLine(matrix2);
 
             matrix2.SetVector(0, new Vector(vector));
-            Console.WriteLine("Первая сторка матрицы : {0}", matrix2.GetVector(0));
+            Console.WriteLine("Первая строка матрицы : {0}", matrix2.GetVector(0));
 
             matrix2.Transpose();
             Console.WriteLine("Транспонирование матрицы: {0}", matrix2);
@@ -52,6 +52,7 @@ namespace Matrix
             Console.WriteLine("Сумма матриц: {0}", Matrix.GetMatrixSum(matrix2, matrix4));
             Console.WriteLine("Разность матриц: {0}", Matrix.GetMatrixDifference(matrix2, matrix4));
             Console.WriteLine("Произведение матриц: {0}", Matrix.GetMatrixMultiplication(matrix2, matrix4));
+
             Console.ReadLine();
         }
     }
