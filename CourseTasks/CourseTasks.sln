@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArrayList", "ArrayList\Arra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashTable", "HashTable\HashTable.csproj", "{75D060F0-3115-4867-9D66-42F5EA642CAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryTree", "BinaryTree\BinaryTree.csproj", "{0E08B1D5-81F7-4832-8610-781A57AE5703}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LambdaFunctions", "LambdaFunctions\LambdaFunctions.csproj", "{503C0AA5-0A61-4559-8D32-42F23A9EF820}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,18 @@ Global
 		{75D060F0-3115-4867-9D66-42F5EA642CAE}.Release|Any CPU.ActiveCfg = Release|x86
 		{75D060F0-3115-4867-9D66-42F5EA642CAE}.Release|x86.ActiveCfg = Release|x86
 		{75D060F0-3115-4867-9D66-42F5EA642CAE}.Release|x86.Build.0 = Release|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Debug|x86.ActiveCfg = Debug|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Debug|x86.Build.0 = Debug|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Release|Any CPU.ActiveCfg = Release|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Release|x86.ActiveCfg = Release|x86
+		{0E08B1D5-81F7-4832-8610-781A57AE5703}.Release|x86.Build.0 = Release|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Debug|x86.ActiveCfg = Debug|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Debug|x86.Build.0 = Debug|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Release|Any CPU.ActiveCfg = Release|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Release|x86.ActiveCfg = Release|x86
+		{503C0AA5-0A61-4559-8D32-42F23A9EF820}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
