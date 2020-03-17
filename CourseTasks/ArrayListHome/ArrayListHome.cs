@@ -16,13 +16,14 @@ namespace ArrayListHome
             }
 
             FileStream file = new FileStream(pathFile, FileMode.Open);
-            StreamReader readFile = new StreamReader(file);
 
-            while (!readFile.EndOfStream)
+            using (StreamReader readFile = new StreamReader(file))
             {
-                stringList.Add(readFile.ReadLine());
+                while (!readFile.EndOfStream)
+                {
+                    stringList.Add(readFile.ReadLine());
+                }
             }
-            readFile.Close();
 
             return stringList;
         }
@@ -33,32 +34,21 @@ namespace ArrayListHome
             {
                 if (list[i] % 2 == 0)
                 {
-                    list.Remove(list[i]);
+                    list.RemoveAt(i);
                     i--;
                 }
             }
         }
 
-        public static List<int> GetListWithoutRepeat(List<int> list)
+        public static List<int> GetListWithoutRepeats(List<int> list)
         {
             List<int> listWithoutRepeats = new List<int>();
 
-            for (int i = 0; i < list.Count; i++)
+            foreach (int item in list)
             {
-                bool isRepeating = false;
-
-                for (int j = 0; j < listWithoutRepeats.Count; j++)
+                if (!listWithoutRepeats.Contains(item))
                 {
-                    if (list[i] == listWithoutRepeats[j])
-                    {
-                        isRepeating = true;
-                        break;
-                    }
-                }
-
-                if (!isRepeating)
-                {
-                    listWithoutRepeats.Add(list[i]);
+                    listWithoutRepeats.Add(item);
                 }
             }
 
@@ -110,8 +100,7 @@ namespace ArrayListHome
                 5
             };
 
-
-            List<int> listWithoutRepeat = GetListWithoutRepeat(listWithRepeat);
+            List<int> listWithoutRepeat = GetListWithoutRepeats(listWithRepeat);
 
             foreach (int value in listWithoutRepeat)
             {

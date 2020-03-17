@@ -5,32 +5,24 @@ namespace Range
 {
     class RangeMain
     {
+        public static string GetStringRanges(Range[] ranges)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Range range in ranges)
+            {
+                sb.Append(range);
+                sb.Append(", ");
+            }
+
+            sb.Remove(sb.Length - 2, 2);
+            sb.Append("]");
+
+            return sb.ToString();
+        }
+
         public static void Main()
         {
-            {
-            }
-            Console.WriteLine("Введите начало диапазона: ");
-            double from = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Введите конец диапазона: ");
-            double to = Convert.ToDouble(Console.ReadLine());
-
-            Range range3 = new Range(from, to);
-            double rangeLength = range3.GetLength();
-            Console.WriteLine("Длина интервала равна {0}. ", rangeLength);
-            Console.WriteLine("Введите число:");
-
-            double number = Convert.ToDouble(Console.ReadLine());
-
-            if (range3.IsInside(number))
-            {
-                Console.WriteLine("Число лежит в интервале. ");
-            }
-            else
-            {
-                Console.WriteLine("Число не лежит в интервале. ");
-            }
-
             Console.WriteLine("Введите начало первого диапазона: ");
             double from1 = Convert.ToDouble(Console.ReadLine());
 
@@ -38,6 +30,20 @@ namespace Range
             double to1 = Convert.ToDouble(Console.ReadLine());
 
             Range range1 = new Range(from1, to1);
+            double rangeLength = range1.GetLength();
+            Console.WriteLine("Длина интервала равна {0}. ", rangeLength);
+            Console.WriteLine("Введите число:");
+
+            double number = Convert.ToDouble(Console.ReadLine());
+
+            if (range1.IsInside(number))
+            {
+                Console.WriteLine("Число лежит в интервале. ");
+            }
+            else
+            {
+                Console.WriteLine("Число не лежит в интервале. ");
+            }
 
             Console.WriteLine("Введите начало второго диапазона: ");
             double from2 = Convert.ToDouble(Console.ReadLine());
@@ -55,34 +61,17 @@ namespace Range
             }
             else
             {
-                Console.WriteLine("Интервал пересечения: ");
+                Console.WriteLine("Интервал пересечения: null");
             }
 
             Range[] union = range1.GetUnion(range2);
             StringBuilder unionString = new StringBuilder("Объединение интервалов дает интервал: [");
-
-            foreach (Range range in union)
-            {
-                unionString.AppendFormat("{0}, ", range);
-            }
-
-            unionString = unionString.Remove(unionString.Length - 2, 2);
-            unionString.Append("]");
+            unionString.Append(GetStringRanges(union));
             Console.WriteLine(unionString.ToString());
 
-            Range[] difference = range1.GetSubtraction(range2);
+            Range[] difference = range1.GetDifference(range2);
             StringBuilder differenceString = new StringBuilder("Разность интервалов дает интервал: [");
-
-            foreach (Range range in difference)
-            {
-                differenceString.AppendFormat("{0}, ", range);
-            }
-
-            if (difference.Length != 0)
-            {
-                differenceString = differenceString.Remove(differenceString.Length - 2, 2);
-            }
-            differenceString.Append("]");
+            differenceString.Append(GetStringRanges(difference));
             Console.WriteLine(differenceString.ToString());
 
             Console.ReadKey();

@@ -12,7 +12,7 @@ namespace Vectors
         {
             if (size <= 0)
             {
-                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + size.ToString(), "size");
+                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + size, nameof(size));
             }
 
             components = new double[size];
@@ -28,8 +28,7 @@ namespace Vectors
         {
             if (components.Length <= 0)
             {
-                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + components.Length.ToString(), "components.Length");
-
+                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + components.Length, nameof(components));
             }
 
             this.components = new double[components.Length];
@@ -40,7 +39,7 @@ namespace Vectors
         {
             if (size <= 0)
             {
-                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + size.ToString(), "size");
+                throw new ArgumentException("Размерность должна быть > 0, сейчас равна " + size, nameof(size));
             }
 
             this.components = new double[size];
@@ -58,10 +57,11 @@ namespace Vectors
 
             foreach (double value in components)
             {
-                sb.Append(value + ", ");
+                sb.Append(value);
+                sb.Append(", ");
             }
 
-            sb = sb.Remove(sb.Length - 2, 2);
+            sb.Remove(sb.Length - 2, 2);
             sb.Append("}");
 
             return sb.ToString();
@@ -80,7 +80,7 @@ namespace Vectors
             }
         }
 
-        public void Subtract(Vector vector)
+        public void Substract(Vector vector)
         {
             if (components.Length < vector.GetSize())
             {
@@ -108,14 +108,14 @@ namespace Vectors
 
         public double GetLength()
         {
-            double module = 0;
+            double sumSquares = 0;
 
             foreach (double value in components)
             {
-                module += Math.Pow(value, 2);
+                sumSquares += Math.Pow(value, 2);
             }
 
-            return Math.Sqrt(module);
+            return Math.Sqrt(sumSquares);
         }
 
         public void SetElement(int index, double value)
@@ -160,7 +160,7 @@ namespace Vectors
 
         public static Vector GetSum(Vector vector1, Vector vector2)
         {
-            Vector resultVector = new Vector(vector1.components);
+            Vector resultVector = new Vector(vector1);
             resultVector.Add(vector2);
 
             return resultVector;
@@ -168,8 +168,8 @@ namespace Vectors
 
         public static Vector GetDifference(Vector vector1, Vector vector2)
         {
-            Vector resultVector = new Vector(vector1.components);
-            resultVector.Subtract(vector2);
+            Vector resultVector = new Vector(vector1);
+            resultVector.Substract(vector2);
 
             return resultVector;
         }

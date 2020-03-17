@@ -44,9 +44,9 @@ namespace Range
             return new Range[] { new Range(From, To), new Range(range.From, range.To) };
         }
 
-        public Range[] GetSubtraction(Range range)
+        public Range[] GetDifference(Range range)
         {
-            if (!(range.To > From && range.From < To))
+            if (range.To < From || range.From > To)
             {
                 return new Range[] { new Range(From, To) };
             }
@@ -55,13 +55,14 @@ namespace Range
             {
                 return new Range[] { new Range(From, range.From), new Range(range.To, To) };
             }
-            else if (range.From > From || range.To < To)
-            {
-                if (range.From > From)
-                {
-                    return new Range[] { new Range(From, range.From) };
-                }
 
+            if (range.From > From)
+            {
+                return new Range[] { new Range(From, range.From) };
+            }
+
+            if (range.To < To)
+            {
                 return new Range[] { new Range(range.To, To) };
             }
 

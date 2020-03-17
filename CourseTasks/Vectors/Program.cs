@@ -21,15 +21,15 @@ namespace Vectors
             Console.WriteLine(vector1);
             Console.WriteLine(new Vector(6, b));
 
-            Console.WriteLine("Размерность вектора vector2 {0}", vector2.GetSize());
+            Console.WriteLine("Размерность вектора vector2: {0}", vector2.GetSize());
 
             vector1.SetElement(1, 10);
-            Console.WriteLine("Значение вектора на 2 позиции {0}", vector1.GetElement(1));
+            Console.WriteLine("Значение вектора на 2 позиции: {0}", vector1.GetElement(1));
 
             vector2.Add(vector1);
             Console.WriteLine("Суммирование к вектору vector2 вектора vector1: {0}", vector2);
 
-            vector2.Subtract(vector1);
+            vector2.Substract(vector1);
             Console.WriteLine("Вычитание от вектора vector2 вектора vector1: {0}", vector2);
 
             vector2.MultiplyByScalar(3);
@@ -38,7 +38,7 @@ namespace Vectors
             vector2.Reverse();
             Console.WriteLine("Обращение вектора vector2: {0}", vector2);
             Console.WriteLine("Длина вектора vector2: {0}", vector2.GetLength());
-            Console.WriteLine("Сравнение на равенство векторов vector1 и vector2 {0}", vector1.Equals(vector2));
+            Console.WriteLine("Сравнение на равенство векторов vector1 и vector2: {0}", vector1.Equals(vector2));
             Console.WriteLine("Хэш код вектора vector1: {0}", vector1.GetHashCode());
             Console.WriteLine(vector1);
             Console.WriteLine(vector2);
@@ -47,8 +47,6 @@ namespace Vectors
             Console.WriteLine("Умножение вектора vector2 и вектора vector1: {0}", Vector.GetScalarMultiplication(vector1, vector2));
 
             Console.ReadLine();
-
-            Console.ReadKey();
         }
     }
 }

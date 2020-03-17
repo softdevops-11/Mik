@@ -34,7 +34,8 @@ namespace Matrix
             Console.WriteLine(matrix2);
 
             matrix2.SetVector(0, new Vector(vector));
-            Console.WriteLine("Первая строка матрицы : {0}", matrix2.GetVector(0));
+            Console.WriteLine("Первая сторка матрицы : {0}", matrix2.GetRowVector(0));
+            Console.WriteLine("Первый столбец матрицы : {0}", matrix2.GetColumnVector(0));
 
             matrix2.Transpose();
             Console.WriteLine("Транспонирование матрицы: {0}", matrix2);
@@ -46,7 +47,7 @@ namespace Matrix
             matrix2.Add(matrix4);
             Console.WriteLine("Сумма матриц: {0}", matrix2);
 
-            matrix2.Subtract(matrix4);
+            matrix2.Substract(matrix4);
             Console.WriteLine("Разность матриц: {0}", matrix2);
             Console.WriteLine("Определитель матрицы: {0}", matrix3.GetDeterminant());
             Console.WriteLine("Сумма матриц: {0}", Matrix.GetMatrixSum(matrix2, matrix4));

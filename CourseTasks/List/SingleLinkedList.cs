@@ -4,16 +4,14 @@ namespace List
 {
     internal class SingleLinkedList<T>
     {
-        private int Length { get; set; }
+        public int Length { get; set; }
         private ListNode<T> head;
-
-        public ListNode<T> Head => head;
 
         public T GetHeadData()
         {
             if (head == null)
             {
-                throw new ArgumentNullException("head", "Список пуст");
+                throw new NullReferenceException("Список пуст");
             }
 
             return head.Data;
@@ -40,8 +38,8 @@ namespace List
         {
             if (index >= Length || index < 0)
             {
-                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до "
-                + Length + " , сейчас он равен" + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до "
+                    + Length + " , сейчас он равен: " + index);
             }
 
             ListNode<T> node = FindNodeByIndex(index);
@@ -53,8 +51,8 @@ namespace List
         {
             if (index >= Length || index < 0)
             {
-                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до "
-                + Length + " , сейчас он равен" + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до "
+                    + Length + " , сейчас он равен: " + index);
             }
 
             ListNode<T> node = FindNodeByIndex(index);
@@ -68,52 +66,35 @@ namespace List
         {
             if (index >= Length || index < 0)
             {
-                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до "
-                + Length + " , сейчас он равен" + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до "
+                    + Length + " , сейчас он равен: " + index);
             }
+
+            T temp;
 
             if (index == 0)
             {
-                T temp = head.Data;
+                temp = head.Data;
                 head = head.Next;
                 Length--;
 
                 return temp;
             }
 
-            int count = 0;
+            ListNode<T> node = FindNodeByIndex(index - 1);
+            temp = node.Next.Data;
+            node.Next = node.Next.Next;
+            Length--;
 
-            for (ListNode<T> current = head, previous = null; current != null; previous = current, current = current.Next)
-            {
-                if (count == index)
-                {
-                    T temp = current.Data;
-                    previous.Next = current.Next;
-                    Length--;
-
-                    return temp;
-                }
-
-                count++;
-            }
-
-            return default;
+            return temp;
         }
 
         public void AddToHead(T data)
         {
             ListNode<T> item = new ListNode<T>(data);
 
-            if (head == null)
-            {
-                head = item;
-            }
-            else
-            {
-                item.Next = head;
-                head = item;
-            }
-
+            item.Next = head;
+            head = item;
             Length++;
         }
 
@@ -121,8 +102,8 @@ namespace List
         {
             if (index > Length || index < 0)
             {
-                throw new ArgumentOutOfRangeException("index", "Неверное значение индекса, должен быть в пределах от 0 до "
-                + Length + " , сейчас он равен" + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до "
+                    + Length + " , сейчас он равен: " + index);
             }
 
             ListNode<T> item = new ListNode<T>(data);
@@ -132,30 +113,28 @@ namespace List
                 item.Next = head;
                 head = item;
                 Length++;
+
+                return;
             }
 
-            int count = 0;
-
-            for (ListNode<T> current = head, previous = null; ; previous = current, current = current.Next)
-            {
-                if (count == index)
-                {
-                    item.Next = current;
-                    previous.Next = item;
-                    Length++;
-                    break;
-                }
-
-                count++;
-            }
+            ListNode<T> node = FindNodeByIndex(index - 1);
+            item.Next = node.Next;
+            node.Next = item;
+            Length++;
         }
 
         public bool DeleteByValue(T data)
         {
+            if (head == null)
+            {
+                throw new NullReferenceException("Список пуст");
+            }
+
             if (Equals(head.Data, data))
             {
                 head = head.Next;
                 Length--;
+
                 return true;
             }
 
@@ -177,7 +156,7 @@ namespace List
         {
             if (head == null)
             {
-                throw new ArgumentNullException("head", "Список пуст");
+                throw new NullReferenceException("Список пуст");
             }
 
             T temp = head.Data;
@@ -190,6 +169,7 @@ namespace List
         public SingleLinkedList<T> Copy()
         {
             SingleLinkedList<T> newList = new SingleLinkedList<T>();
+            newList.Length = Length;
 
             int count = 0;
             ListNode<T> tail = null;
@@ -208,7 +188,6 @@ namespace List
                 }
 
                 tail = item;
-                newList.Length++;
                 count++;
             }
 
@@ -232,4 +211,3 @@ namespace List
         }
     }
 }
-
