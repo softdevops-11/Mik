@@ -1,5 +1,4 @@
-﻿using ArrayList;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,99 +6,63 @@ namespace HashTable
 {
     internal class HashTable<T> : ICollection<T>
     {
-        private ArrayList<T>[] items;
-        private int length;
-        private int modCount = 0;
-
-        public int Count => length;
-
-        public int Capacity
-        {
-            get => items.Length;
-            set
-            {
-                ArrayList<T>[] old = items;
-                items = new ArrayList<T>[value];
-                length = 0;
-
-                for (int i = 0; i < old.Length; i++)
-                {
-                    if (old[i] != null)
-                    {
-                        for (int j = 0; j < old[i].Count; j++)
-                        {
-                            Add(old[i][j]);
-                        }
-                    }
-                }
-            }
-        }
+        private List<T>[] items;
+        public int Count { get; private set; }
+        private int modCount;
+        private readonly int defaultCapacity = 10;
 
         public bool IsReadOnly => false;
 
-        public HashTable(int size)
+        public HashTable()
         {
-            if (size <= 0)
+            items = new List<T>[defaultCapacity];
+            Count = 0;
+        }
+
+        public HashTable(int capacity)
+        {
+            if (capacity < 0)
             {
-                throw new ArgumentNullException("size", "Размерность массива должна быть > 0");
+                throw new OverflowException("Размерность массива должна быть > 0 , сейчас равна: " + capacity);
             }
 
-            items = new ArrayList<T>[size];
-            length = 0;
+            items = new List<T>[capacity];
+            Count = 0;
         }
 
         public void Add(T o)
         {
-            if (items.Length == 0)
-            {
-                throw new ArgumentNullException("items.Length", "Размерность массива должна быть > 0");
-            }
-
             int index = Math.Abs(o.GetHashCode() % items.Length);
 
-            for (int i = 0; i < items.Length; i++)
+            if (items[index] == null)
             {
-                if (index == i)
-                {
-                    if (items[i] == null)
-                    {
-                        items[i] = new ArrayList<T>(10);
-                    }
-
-                    items[i].Add(o);
-                }
+                items[index] = new List<T>();
             }
 
-            length++;
+            items[index].Add(o);
+            Count++;
             modCount++;
         }
 
         public void Clear()
         {
-            length = 0;
+            for (int i = 0; i < items.Length; i++)
+            {
+                items[i] = default;
+            }
+
+            Count = 0;
         }
 
         public bool Contains(T o)
         {
-            if (items.Length == 0)
-            {
-                throw new ArgumentNullException("items.Length", "Размерность массива должна быть > 0");
-            }
-
             int index = Math.Abs(o.GetHashCode() % items.Length);
 
-            for (int i = 0; i < items.Length; i++)
+            if (items[index] != null)
             {
-                if (items[i] != null)
+                if (items[index].Contains(o))
                 {
-                    for (int j = 0; j < items[i].Count; j++)
-                    {
-                        if (Equals(o, items[i][j]))
-                        {
-                            return true;
-                        }
-
-                    }
+                    return true;
                 }
             }
 
@@ -108,27 +71,16 @@ namespace HashTable
 
         public bool Remove(T o)
         {
-            if (items.Length == 0)
-            {
-                throw new ArgumentNullException("items.Length", "Размерность массива должна быть > 0");
-            }
-
             int index = Math.Abs(o.GetHashCode() % items.Length);
 
-            for (int i = 0; i < items.Length; i++)
+            if (items[index] != null)
             {
-                if (items[i] != null)
+                if (items[index].Contains(o))
                 {
-                    for (int j = 0; j < items[i].Count; j++)
-                    {
-                        if (Equals(o, items[i][j]))
-                        {
-                            items[i].RemoveAt(j);
-                            modCount++;
-                            length--;
-                            return true;
-                        }
-                    }
+                    items[index].Remove(o);
+                    modCount++;
+                    Count--;
+                    return true;
                 }
             }
 
@@ -137,33 +89,27 @@ namespace HashTable
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (arrayIndex <= 0 && arrayIndex > array.Length)
+            if (arrayIndex >= array.Length || arrayIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex", "Индекс вне пределов массива");
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до " + array.Length
+                    + " , сейчас он равен: " + arrayIndex);
             }
 
             if (array == null)
             {
-                throw new ArgumentNullException("array", "Массив null");
+                throw new NullReferenceException("Массив null");
             }
 
-            if (length > array.Length - arrayIndex)
+            if (Count > array.Length - arrayIndex)
             {
-                throw new ArgumentException("Размер копируемого списка превышает размер остатка массива", "arrayIndex");
+                throw new ArgumentException("Размер копируемого списка составляет " + Count
+                    + ", что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
             }
 
-            int index = arrayIndex;
-
-            for (int i = 0; i < items.Length; i++)
+            foreach (T item in this)
             {
-                if (items[i] != null)
-                {
-                    for (int j = 0; j < items[i].Count; j++)
-                    {
-                        array[index] = items[i][j];
-                        index++;
-                    }
-                }
+                array[arrayIndex] = item;
+                arrayIndex++;
             }
         }
 

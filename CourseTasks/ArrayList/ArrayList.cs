@@ -7,28 +7,26 @@ namespace ArrayList
     public class ArrayList<T> : IList<T>
     {
         private T[] items;
-        private int length;
-        private int modCount = 0;
-
-        public int Count => length;
+        public int Count { get; private set; }
+        private int modCount;
 
         public bool IsReadOnly => false;
 
         public int Capacity
         {
             get => items.Length;
-            private set
+            set
             {
-                T[] old = items;
-                items = new T[value];
-
-                if (value > old.Length)
+                if (value < 0)
                 {
-                    Array.Copy(old, 0, items, 0, old.Length);
+                    throw new OverflowException("Размерность массива должна быть > 0 , сейчас равна: " + value);
                 }
-                else
+
+                Array.Resize(ref items, value);
+
+                if (value < Count)
                 {
-                    Array.Copy(old, 0, items, 0, value);
+                    Count = value;
                 }
             }
         }
@@ -37,38 +35,46 @@ namespace ArrayList
         {
             get
             {
-                if (index <= 0 && index > items.Length)
-                {
-                    throw new ArgumentOutOfRangeException("index", "Индекс вне пределов массива");
-                }
+                CheckIndex(index, items.Length);
 
                 return items[index];
             }
             set
             {
-                if (index <= 0 && index > items.Length)
-                {
-                    throw new ArgumentOutOfRangeException("index", "Индекс вне пределов массива");
-                }
+                CheckIndex(index, items.Length);
 
                 items[index] = value;
             }
 
         }
 
-        public ArrayList(int size)
+        public ArrayList()
         {
-            if (size <= 0)
+            items = new T[0];
+        }
+
+        public ArrayList(int capacity)
+        {
+            if (capacity < 0)
             {
-                throw new ArgumentNullException("size", "Размерность массива должна быть > 0");
+                throw new OverflowException("Размерность массива должна быть > 0 , сейчас равна: " + capacity);
             }
 
-            items = new T[size];
+            items = new T[capacity];
+        }
+
+        private static void CheckIndex(int index, int length)
+        {
+            if (index >= length || index < 0)
+            {
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до " + length
+                    + " , сейчас он равен: " + index);
+            }
         }
 
         public int IndexOf(T o)
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (Equals(o, items[i]))
                 {
@@ -81,63 +87,68 @@ namespace ArrayList
 
         public void Insert(int index, T o)
         {
-            if (index <= 0 && index > items.Length)
+            CheckIndex(index, items.Length);
+
+            if (Count >= items.Length)
             {
-                throw new ArgumentOutOfRangeException("index", "Индекс вне пределов массива");
+                Capacity = Count * 2;
             }
 
-            if (length >= items.Length)
+            if (index < Count)
             {
-                Capacity = length * 2;
+                Array.Copy(items, index, items, index + 1, Count - index);
+                items[index] = o;
+            }
+            else
+            {
+                items[Count] = o;
             }
 
-            Array.Copy(items, index, items, index + 1, length - index - 1);
-            items[index] = o;
-            length++;
+            Count++;
             modCount++;
         }
 
         public void RemoveAt(int index)
         {
-            if (index <= 0 && index > items.Length)
+            CheckIndex(index, items.Length);
+
+            if (index < Count - 1)
             {
-                throw new ArgumentOutOfRangeException("index", "Индекс вне пределов массива");
+                Array.Copy(items, index + 1, items, index, Count - index - 1);
             }
 
-            if (index < length - 1)
-            {
-                Array.Copy(items, index + 1, items, index, length - index - 1);
-            }
-
-            length--;
+            Count--;
+            items[Count] = default;
             modCount++;
         }
 
         public void Add(T o)
         {
-            if (length >= items.Length)
+            if (Count >= items.Length)
             {
-                Capacity = items.Length * 2;
+                Capacity = items.Length * 2 + 1;
             }
 
-            items[length] = o;
-            length++;
+            items[Count] = o;
+            Count++;
             modCount++;
         }
 
         public void Clear()
         {
-            length = 0;
+            for (int i = 0; i < Count; i++)
+            {
+                items[i] = default;
+            }
+
+            Count = 0;
         }
 
         public bool Contains(T o)
         {
-            for (int i = 0; i < length; i++)
+            if (IndexOf(o) != -1)
             {
-                if (Equals(o, items[i]))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -145,34 +156,28 @@ namespace ArrayList
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (arrayIndex <= 0 && arrayIndex > array.Length)
-            {
-                throw new ArgumentOutOfRangeException("arrayIndex", "Индекс вне пределов массива");
-            }
+            CheckIndex(arrayIndex, array.Length);
 
             if (array == null)
             {
-                throw new ArgumentNullException("array", "Массив null");
+                throw new NullReferenceException("Массив null");
             }
 
-            if (length > array.Length - arrayIndex)
+            if (Count > array.Length - arrayIndex)
             {
-                throw new ArgumentException("Размер копируемого списка превышает размер остатка массива", "arrayIndex");
+                throw new ArgumentException("Размер копируемого списка составляет " + Count
+                    + ", что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
             }
 
-            Array.Copy(items, 0, array, arrayIndex, length);
+            Array.Copy(items, 0, array, arrayIndex, Count);
         }
 
         public bool Remove(T o)
         {
-            for (int i = 0; i < length; i++)
+            if (IndexOf(o) != -1)
             {
-                if (Equals(o, items[i]))
-                {
-                    RemoveAt(i);
-                    modCount++;
-                    return true;
-                }
+                RemoveAt(IndexOf(o));
+                return true;
             }
 
             return false;
@@ -182,7 +187,7 @@ namespace ArrayList
         {
             int tempModCount = modCount;
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (tempModCount != modCount)
                 {
@@ -200,11 +205,11 @@ namespace ArrayList
 
         public void TrimExcess()
         {
-            const double epsilon = 0.1;
+            const double epsilon = 0.9;
 
-            if (length / (double)items.Length <= epsilon)
+            if (Count / (double)items.Length <= epsilon)
             {
-                Capacity = length;
+                Capacity = Count;
             }
         }
     }

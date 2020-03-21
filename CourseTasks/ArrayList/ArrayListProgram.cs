@@ -52,11 +52,13 @@ namespace ArrayList
 
             ArrayList<int> listNew = new ArrayList<int>(10)
             {
-                2
+                2,
             };
+
             listNew.TrimExcess();
 
             Console.ReadLine();
         }
     }
 }
+

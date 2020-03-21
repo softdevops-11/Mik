@@ -2,11 +2,11 @@
 
 namespace HashTable
 {
-    class HashTableProgram
+    internal class HashTableProgram
     {
-        static void Main()
+        private static void Main()
         {
-            HashTable<int> hashTable = new HashTable<int>(10);
+            HashTable<int> hashTable = new HashTable<int>();
             int[] array = new int[10];
 
             hashTable.Add(5);
@@ -34,7 +34,6 @@ namespace HashTable
             }
 
             Console.WriteLine();
-            hashTable.Capacity = 20;
 
             foreach (int value in hashTable)
             {
