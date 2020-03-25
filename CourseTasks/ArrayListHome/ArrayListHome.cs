@@ -6,26 +6,26 @@ namespace ArrayListHome
 {
     internal class ArrayListHome
     {
-        public static List<string> ReadFileToList(string pathFile)
+        public static List<string> GetReadFileToList(string filePath)
         {
-            List<string> stringList = new List<string>();
+            List<string> fileLines = new List<string>();
 
-            if (!File.Exists(pathFile))
+            try
             {
-                throw new FileNotFoundException("Файл не найден", pathFile);
-            }
-
-            FileStream file = new FileStream(pathFile, FileMode.Open);
-
-            using (StreamReader readFile = new StreamReader(file))
-            {
-                while (!readFile.EndOfStream)
+                using (StreamReader readFile = new StreamReader(new FileStream(filePath, FileMode.Open)))
                 {
-                    stringList.Add(readFile.ReadLine());
+                    while (!readFile.EndOfStream)
+                    {
+                        fileLines.Add(readFile.ReadLine());
+                    }
                 }
             }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("Файл не найден");
+            }
 
-            return stringList;
+            return fileLines;
         }
 
         public static void RemoveEvenNumbers(List<int> list)
@@ -57,54 +57,35 @@ namespace ArrayListHome
 
         private static void Main()
         {
-            string pathFile = @"..\..\Text.txt";
+            string filePath = @"..\..\Text1.txt";
 
-            List<string> stringList = ReadFileToList(pathFile);
+            List<string> fileLines = GetReadFileToList(filePath);
 
-            foreach (string line in stringList)
+            foreach (string line in fileLines)
             {
                 Console.WriteLine(line);
             }
 
             Console.WriteLine();
 
-            List<int> list = new List<int>
-            {
-                1,
-                6,
-                5,
-                9,
-                10,
-                12,
-                14,
-                65,
-                33,
-                11
-            };
+            List<int> list = new List<int> { 1, 6, 5, 9, 10, 12, 14, 65, 33, 11 };
+
             RemoveEvenNumbers(list);
 
-            foreach (int value in list)
+            foreach (int number in list)
             {
-                Console.WriteLine(value);
+                Console.Write("{0} ", number);
             }
 
             Console.WriteLine();
 
-            List<int> listWithRepeat = new List<int>
-            {
-                1,
-                5,
-                2,
-                1,
-                3,
-                5
-            };
+            List<int> listWithRepeats = new List<int> { 1, 5, 2, 1, 3, 5 };
 
-            List<int> listWithoutRepeat = GetListWithoutRepeats(listWithRepeat);
+            List<int> listWithoutRepeats = GetListWithoutRepeats(listWithRepeats);
 
-            foreach (int value in listWithoutRepeat)
+            foreach (int number in listWithoutRepeats)
             {
-                Console.WriteLine(value);
+                Console.Write("{0} ", number);
             }
 
             Console.ReadLine();

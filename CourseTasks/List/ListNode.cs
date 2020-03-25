@@ -1,5 +1,5 @@
 ﻿namespace List
-    {
+{
     internal class ListNode<T>
     {
         public T Data { get; set; }
@@ -16,6 +16,12 @@
             Data = data;
             Next = next;
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Узел: {0}] -> {1}", Data, Next);
+        }
     }
 }
+
 

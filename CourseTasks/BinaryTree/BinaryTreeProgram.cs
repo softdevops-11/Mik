@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BinaryTree
 {
@@ -7,31 +8,48 @@ namespace BinaryTree
         private static void Main()
         {
             BinaryTree<int> tree = new BinaryTree<int>(10);
-            tree.RootNode = tree.Add(13, tree.RootNode);
-            tree.RootNode = tree.Add(7, tree.RootNode);
-            tree.RootNode = tree.Add(15, tree.RootNode);
-            tree.RootNode = tree.Add(13, tree.RootNode);
-            tree.RootNode = tree.Add(5, tree.RootNode);
-            tree.RootNode = tree.Add(9, tree.RootNode);
-            tree.RootNode = tree.Add(8, tree.RootNode);
-            tree.RootNode = tree.Add(4, tree.RootNode);
-            tree.RootNode = tree.Add(7, tree.RootNode);
-            tree.RootNode = tree.Add(3, tree.RootNode);
-            tree.RootNode = tree.Add(12, tree.RootNode);
-            tree.RootNode = tree.Add(11, tree.RootNode);
+            tree.Add(13);
+            tree.Add(7);
+            tree.Add(15);
+            tree.Add(13);
+            tree.Add(5);
+            tree.Add(9);
+            tree.Add(8);
+            tree.Add(4);
+            tree.Add(7);
+            tree.Add(2);
+            tree.Add(12);
+            tree.Add(11);
 
-            BinaryTreeNode<int> foundNode = tree.FindNode(8, tree.RootNode);
+            bool isNode = tree.FindNode(16);
 
-            int count = tree.GetCountNodes(tree.RootNode);
+            int count = tree.countNodes;
             tree.DeleteNode(10);
 
-            Console.WriteLine(tree.GetAroundInWide(tree.RootNode));
+            IEnumerable<int> setOfNodes = tree.GetAroundInWide();
+
+            foreach (int node in setOfNodes)
+            {
+                Console.Write("{0} ", node);
+            }
+
             Console.WriteLine();
 
-            Console.WriteLine(tree.GetAroundInDeepWithRecursion(tree.RootNode));
+            setOfNodes = tree.GetAroundInDeepWithRecursion();
+
+            foreach (int node in setOfNodes)
+            {
+                Console.Write("{0} ", node);
+            }
+
             Console.WriteLine();
 
-            Console.WriteLine(tree.GetAroundInDeepWithoutRecursion(tree.RootNode));
+            setOfNodes = tree.GetAroundInDeepWithoutRecursion();
+
+            foreach (int node in setOfNodes)
+            {
+                Console.Write("{0} ", node);
+            }
 
             Console.ReadLine();
         }

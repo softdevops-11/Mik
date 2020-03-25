@@ -3,11 +3,11 @@ using System.Text;
 
 namespace Range
 {
-    class RangeMain
+    internal class RangeMain
     {
-        public static string GetStringRanges(Range[] ranges)
+        public static string GetRangesString(Range[] ranges)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder("[");
 
             foreach (Range range in ranges)
             {
@@ -15,7 +15,10 @@ namespace Range
                 sb.Append(", ");
             }
 
-            sb.Remove(sb.Length - 2, 2);
+            if (sb.Length > 1)
+            {
+                sb.Remove(sb.Length - 2, 2);
+            }
             sb.Append("]");
 
             return sb.ToString();
@@ -65,14 +68,10 @@ namespace Range
             }
 
             Range[] union = range1.GetUnion(range2);
-            StringBuilder unionString = new StringBuilder("Объединение интервалов дает интервал: [");
-            unionString.Append(GetStringRanges(union));
-            Console.WriteLine(unionString.ToString());
+            Console.WriteLine("Объединение интервалов дает интервал: {0}", GetRangesString(union));
 
             Range[] difference = range1.GetDifference(range2);
-            StringBuilder differenceString = new StringBuilder("Разность интервалов дает интервал: [");
-            differenceString.Append(GetStringRanges(difference));
-            Console.WriteLine(differenceString.ToString());
+            Console.WriteLine("Разность интервалов дает интервал: {0}", GetRangesString(difference));
 
             Console.ReadKey();
         }

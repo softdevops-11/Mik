@@ -1,246 +1,310 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BinaryTree
 {
-    internal class BinaryTree<T> where T : IComparable<T>
+    internal class BinaryTree<T>
     {
-        public BinaryTreeNode<T> RootNode { get; set; }
+        private BinaryTreeNode<T> RootNode { get; set; }
+
+        public int countNodes { get; private set; }
+
+        private Comparer<T> Comparer { get; set; }
+
+        public BinaryTree()
+        {
+            RootNode = null;
+        }
 
         public BinaryTree(T data)
         {
             RootNode = new BinaryTreeNode<T>(data);
+            Comparer = Comparer<T>.Default;
+            countNodes++;
         }
 
-        public BinaryTreeNode<T> Add(T data, BinaryTreeNode<T> node)
+        public BinaryTree(T data, Comparer<T> comparer)
         {
-            if (node == null)
+            RootNode = new BinaryTreeNode<T>(data);
+            Comparer = comparer;
+            countNodes++;
+        }
+
+        public void Add(T data)
+        {
+
+            if (RootNode == null)
             {
-                node = new BinaryTreeNode<T>(data);
+                RootNode = new BinaryTreeNode<T>(data);
             }
-            else
+
+            BinaryTreeNode<T> node = RootNode;
+
+            while (node != null)
             {
-                if (data.CompareTo(node.Data) < 0)
+                if (Comparer.Compare(data, node.Data) < 0)
                 {
-                    node.Left = Add(data, node.Left);
-                    node.Left.Parent = node;
+                    if (node.Left != null)
+                    {
+                        node = node.Left;
+                    }
+                    else
+                    {
+                        node.Left = new BinaryTreeNode<T>(data);
+                        countNodes++;
+                        return;
+                    }
                 }
                 else
                 {
-                    node.Right = Add(data, node.Right);
-                    node.Right.Parent = node;
+                    if (node.Right != null)
+                    {
+                        node = node.Right;
+                    }
+                    else
+                    {
+                        node.Right = new BinaryTreeNode<T>(data);
+                        countNodes++;
+                        return;
+                    }
                 }
             }
 
-            return node;
         }
 
-        public BinaryTreeNode<T> FindNode(T data, BinaryTreeNode<T> node)
+        public bool FindNode(T data)
         {
-            if (node == null || data.CompareTo(node.Data) == 0)
+            if (RootNode != null)
             {
-                return node;
-            }
-            else
-            {
-                if (data.CompareTo(node.Data) < 0)
+                BinaryTreeNode<T> node = RootNode;
+
+                while (node != null)
                 {
-                    return FindNode(data, node.Left);
-                }
-                else
-                {
-                    return FindNode(data, node.Right);
+                    if (Comparer.Compare(data, node.Data) == 0)
+                    {
+                        return true;
+                    }
+
+                    if (Comparer.Compare(data, node.Data) < 0)
+                    {
+                        node = node.Left;
+                    }
+                    else
+                    {
+                        node = node.Right;
+                    }
                 }
             }
+
+            return false;
         }
 
         public void DeleteNode(T data)
         {
-            BinaryTreeNode<T> deleteNode = FindNode(data, RootNode);
-
-            if (deleteNode == null)
+            if (RootNode != null)
             {
-                return;
-            }
+                BinaryTreeNode<T> node = RootNode;
+                BinaryTreeNode<T> deleteNode = null;
+                BinaryTreeNode<T> parentNode = null;
 
-            if (deleteNode.Parent == null && deleteNode.Left == null && deleteNode.Right == null)
-            {
-                RootNode = null;
-                return;
-            }
-
-            if (deleteNode.Left == null && deleteNode.Right == null)
-            {
-                if (deleteNode.Parent.Left != null && deleteNode.Parent.Left.Data.CompareTo(deleteNode.Data) == 0)
+                while (node != null)
                 {
-                    deleteNode.Parent.Left = null;
+                    if (Comparer.Compare(data, node.Data) == 0)
+                    {
+                        deleteNode = node;
+                        break;
+                    }
+
+                    if (Comparer.Compare(data, node.Data) < 0)
+                    {
+                        if (Comparer.Compare(data, node.Left.Data) == 0)
+                        {
+                            parentNode = node;
+                        }
+
+                        node = node.Left;
+                    }
+                    else
+                    {
+                        if (Comparer.Compare(data, node.Right.Data) == 0)
+                        {
+                            parentNode = node;
+                        }
+
+                        node = node.Right;
+                    }
                 }
-                else
+
+                if (deleteNode == null)
                 {
-                    deleteNode.Parent.Right = null;
-                }
-            }
-            else if (deleteNode.Left != null && deleteNode.Right == null)
-            {
-                if (deleteNode.Parent == null)
-                {
-                    RootNode = deleteNode.Left;
-                    RootNode.Parent = null;
                     return;
                 }
 
-                if (deleteNode.Parent.Left != null && deleteNode.Parent.Left.Data.CompareTo(deleteNode.Data) == 0)
+                if (parentNode == null && deleteNode.Left == null && deleteNode.Right == null)
                 {
-                    deleteNode.Parent.Left = deleteNode.Left;
-                }
-                else
-                {
-                    deleteNode.Parent.Right = deleteNode.Left;
-                }
-
-                deleteNode.Left.Parent = deleteNode.Parent;
-            }
-            else if (deleteNode.Right != null && deleteNode.Left == null)
-            {
-                if (deleteNode.Parent == null)
-                {
-                    RootNode = deleteNode.Right;
-                    RootNode.Parent = null;
+                    RootNode = null;
+                    countNodes--;
                     return;
                 }
 
-                if (deleteNode.Parent.Left != null && deleteNode.Parent.Left.Data.CompareTo(deleteNode.Data) == 0)
+                if (deleteNode.Left == null && deleteNode.Right == null)
                 {
-                    deleteNode.Parent.Left = deleteNode.Right;
+                    if (parentNode.Left != null && Comparer.Compare(parentNode.Left.Data, deleteNode.Data) == 0)
+                    {
+                        parentNode.Left = null;
+                        countNodes--;
+                    }
+                    else
+                    {
+                        parentNode.Right = null;
+                        countNodes--;
+                    }
+                }
+                else if (deleteNode.Left != null && deleteNode.Right == null)
+                {
+                    if (parentNode == null)
+                    {
+                        RootNode = deleteNode.Left;
+                        countNodes--;
+                        return;
+                    }
+
+                    if (parentNode.Left != null && Comparer.Compare(parentNode.Left.Data, deleteNode.Data) == 0)
+                    {
+                        parentNode.Left = deleteNode.Left;
+                        countNodes--;
+                    }
+                    else
+                    {
+                        parentNode.Right = deleteNode.Left;
+                        countNodes--;
+                    }
+                }
+                else if (deleteNode.Right != null && deleteNode.Left == null)
+                {
+                    if (parentNode == null)
+                    {
+                        RootNode = deleteNode.Right;
+                        countNodes--;
+                        return;
+                    }
+
+                    if (parentNode.Left != null && Comparer.Compare(parentNode.Left.Data, deleteNode.Data) == 0)
+                    {
+                        parentNode.Left = deleteNode.Right;
+                        countNodes--;
+                    }
+                    else
+                    {
+                        parentNode.Right = deleteNode.Right;
+                        countNodes--;
+                    }
                 }
                 else
                 {
-                    deleteNode.Parent.Right = deleteNode.Right;
-                }
+                    BinaryTreeNode<T> minimumNode = deleteNode.Right;
+                    BinaryTreeNode<T> parentMinimumNode = minimumNode;
 
-                deleteNode.Right.Parent = deleteNode.Parent;
-            }
-            else
-            {
-                BinaryTreeNode<T> minimumNode = deleteNode.Right;
+                    while (minimumNode.Left != null)
+                    {
+                        if (minimumNode.Left.Left == null)
+                        {
+                            parentMinimumNode = minimumNode;
+                        }
 
-                while (minimumNode.Left != null)
-                {
-                    minimumNode = minimumNode.Left;
-                }
+                        minimumNode = minimumNode.Left;
+                    }
 
-                BinaryTreeNode<T> temp = minimumNode;
+                    deleteNode.Data = minimumNode.Data;
+                    countNodes--;
 
-                if (minimumNode.Right != null)
-                {
-                    minimumNode = minimumNode.Right;
-                    temp.Parent = deleteNode.Parent;
-                    temp.Left = deleteNode.Left;
-                    temp.Left.Parent = temp;
-                }
-                else
-                {
-                    minimumNode.Parent.Left = null;
-                    temp.Parent = deleteNode.Parent;
-                    temp.Left = deleteNode.Left;
-                    temp.Right = deleteNode.Right;
-                    temp.Left.Parent = temp;
-                    temp.Right.Parent = temp;
-                }
-
-                if (deleteNode.Parent == null)
-                {
-                    RootNode = temp;
-                    return;
-                }
-
-                if (deleteNode.Parent.Left != null && deleteNode.Parent.Left.Data.CompareTo(deleteNode.Data) == 0)
-                {
-                    deleteNode.Parent.Left = temp;
-                }
-                else
-                {
-                    deleteNode.Parent.Right = temp;
+                    if (minimumNode.Right != null)
+                    {
+                        parentMinimumNode.Left = minimumNode.Right;
+                    }
+                    else
+                    {
+                        parentMinimumNode.Left = null;
+                    }
                 }
             }
         }
 
-        public int GetCountNodes(BinaryTreeNode<T> node)
+        public IEnumerable<T> GetAroundInWide()
         {
+            BinaryTreeNode<T> node = RootNode;
+
             if (node == null)
             {
-                return 0;
-            }
-            else
-            {
-                int count = 1;
-                count += GetCountNodes(node.Left);
-                count += GetCountNodes(node.Right);
-                return count;
-            }
-        }
-
-        public string GetAroundInWide(BinaryTreeNode<T> node)
-        {
-            if (node == null)
-            {
-                return default;
+                yield break;
             }
 
-            Queue<BinaryTreeNode<T>> quene = new Queue<BinaryTreeNode<T>>();
-            quene.Enqueue(node);
-            string stringWide = "";
+            Queue<BinaryTreeNode<T>> queue = new Queue<BinaryTreeNode<T>>();
+            queue.Enqueue(node);
 
-            while (quene.Count != 0)
+            while (queue.Count != 0)
             {
-                node = quene.Dequeue();
-                stringWide += " узел " + node.Data;
+                node = queue.Dequeue();
+                yield return node.Data;
 
                 if (node.Left != null)
                 {
-                    quene.Enqueue(node.Left);
+                    queue.Enqueue(node.Left);
                 }
 
                 if (node.Right != null)
                 {
-                    quene.Enqueue(node.Right);
+                    queue.Enqueue(node.Right);
+                }
+            }
+        }
+
+        public IEnumerable<T> GetAroundInDeepWithRecursion()
+        {
+            return GetAroundInDeepWithRecursion(RootNode);
+        }
+
+        public IEnumerable<T> GetAroundInDeepWithRecursion(BinaryTreeNode<T> node)
+        {
+            if (node == null)
+            {
+                yield break;
+            }
+
+            yield return node.Data;
+
+            if (node.Left != null)
+            {
+                foreach (var nodes in GetAroundInDeepWithRecursion(node.Left))
+                {
+                    yield return nodes;
                 }
             }
 
-            return stringWide;
-        }
-
-        public string GetAroundInDeepWithRecursion(BinaryTreeNode<T> node)
-        {
-            if (node == null)
+            if (node.Right != null)
             {
-                return default;
-            }
-            else
-            {
-                string stringDeep = "";
-                stringDeep += " узел " + node.Data;
-                stringDeep += GetAroundInDeepWithRecursion(node.Left);
-                stringDeep += GetAroundInDeepWithRecursion(node.Right);
-                return stringDeep;
+                foreach (var nodes in GetAroundInDeepWithRecursion(node.Right))
+                {
+                    yield return nodes;
+                }
             }
         }
 
-        public string GetAroundInDeepWithoutRecursion(BinaryTreeNode<T> node)
+        public IEnumerable<T> GetAroundInDeepWithoutRecursion()
         {
+            BinaryTreeNode<T> node = RootNode;
+
             if (node == null)
             {
-                return default;
+                yield break;
             }
 
             Stack<BinaryTreeNode<T>> stack = new Stack<BinaryTreeNode<T>>();
             stack.Push(node);
-            string stringDeep = "";
 
             while (stack.Count != 0)
             {
                 node = stack.Pop();
-                stringDeep += " узел " + node.Data;
+                yield return node.Data;
 
                 if (node.Right != null)
                 {
@@ -252,8 +316,6 @@ namespace BinaryTree
                     stack.Push(node.Left);
                 }
             }
-
-            return stringDeep;
         }
     }
 }
