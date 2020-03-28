@@ -6,7 +6,7 @@ namespace ArrayListHome
 {
     internal class ArrayListHome
     {
-        public static List<string> GetReadFileToList(string filePath)
+        public static List<string> GetFileLines(string filePath)
         {
             List<string> fileLines = new List<string>();
 
@@ -59,7 +59,7 @@ namespace ArrayListHome
         {
             string filePath = @"..\..\Text1.txt";
 
-            List<string> fileLines = GetReadFileToList(filePath);
+            List<string> fileLines = GetFileLines(filePath);
 
             foreach (string line in fileLines)
             {
