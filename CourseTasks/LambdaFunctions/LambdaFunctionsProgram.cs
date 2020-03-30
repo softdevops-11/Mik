@@ -58,8 +58,10 @@ namespace LambdaFunctions
 
             Console.WriteLine();
 
-            IEnumerable<Person> selectedPersons = persons.Where(p => p.Age >= 20 && p.Age <= 45);
-            string sortedNames = string.Join(", ", selectedPersons.OrderByDescending(p => p.Age).Select(p => p.Name));
+            string sortedNames = string.Join(", ", persons
+                .Where(p => p.Age >= 20 && p.Age <= 45)
+                .OrderByDescending(p => p.Age)
+                .Select(p => p.Name));
             Console.WriteLine("Имена в порядке убывания возраста: " + sortedNames + ".");
 
             Console.ReadLine();

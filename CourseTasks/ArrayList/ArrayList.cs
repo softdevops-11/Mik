@@ -7,8 +7,10 @@ namespace ArrayList
     public class ArrayList<T> : IList<T>
     {
         private T[] items;
-        public int Count { get; private set; }
         private int modCount;
+        private const int DefaultCapacity = 10;
+
+        public int Count { get; private set; }
 
         public bool IsReadOnly => false;
 
@@ -17,17 +19,18 @@ namespace ArrayList
             get => items.Length;
             set
             {
-                if (value < 0)
+                if (value < items.Length)
                 {
-                    throw new OverflowException("Размерность массива должна быть > 0 , сейчас равна: " + value);
+                    throw new ArgumentOutOfRangeException(nameof(value), "Размерность массива должна быть >= " 
+                        + items.Length + ", сейчас равна: " + value);
                 }
-
-                Array.Resize(ref items, value);
 
                 if (value < Count)
                 {
                     Count = value;
                 }
+
+                Array.Resize(ref items, value);
             }
         }
 
@@ -45,19 +48,18 @@ namespace ArrayList
 
                 items[index] = value;
             }
-
         }
 
         public ArrayList()
         {
-            items = new T[0];
+            items = new T[DefaultCapacity];
         }
 
         public ArrayList(int capacity)
         {
             if (capacity < 0)
             {
-                throw new OverflowException("Размерность массива должна быть > 0 , сейчас равна: " + capacity);
+                throw new ArgumentOutOfRangeException("Размерность массива должна быть >= 0 , сейчас равна: " + capacity);
             }
 
             items = new T[capacity];
@@ -65,10 +67,10 @@ namespace ArrayList
 
         private static void CheckIndex(int index, int length)
         {
-            if (index >= length || index < 0)
+            if (index < 0 || index >= length)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах от 0 до " + length
-                    + " , сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах:" + 
+                    " [0, " + (length - 1) + "] , сейчас он равен: " + index);
             }
         }
 
@@ -87,23 +89,15 @@ namespace ArrayList
 
         public void Insert(int index, T o)
         {
-            CheckIndex(index, items.Length);
+            CheckIndex(index, Count + 1);
 
             if (Count >= items.Length)
             {
                 Capacity = Count * 2;
             }
 
-            if (index < Count)
-            {
-                Array.Copy(items, index, items, index + 1, Count - index);
-                items[index] = o;
-            }
-            else
-            {
-                items[Count] = o;
-            }
-
+            Array.Copy(items, index, items, index + 1, Count - index);
+            items[index] = o;
             Count++;
             modCount++;
         }
@@ -118,7 +112,7 @@ namespace ArrayList
             }
 
             Count--;
-            items[Count] = default;
+            items[Count] = default(T);
             modCount++;
         }
 
@@ -126,7 +120,14 @@ namespace ArrayList
         {
             if (Count >= items.Length)
             {
-                Capacity = items.Length * 2 + 1;
+                if (items.Length == 0)
+                {
+                    Capacity = 1;
+                }
+                else
+                {
+                    Capacity = items.Length * 2;
+                }
             }
 
             items[Count] = o;
@@ -136,37 +137,28 @@ namespace ArrayList
 
         public void Clear()
         {
-            for (int i = 0; i < Count; i++)
-            {
-                items[i] = default;
-            }
-
+            Array.Resize(ref items, 0);
             Count = 0;
         }
 
         public bool Contains(T o)
         {
-            if (IndexOf(o) != -1)
-            {
-                return true;
-            }
-
-            return false;
+            return IndexOf(o) != -1;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            CheckIndex(arrayIndex, array.Length);
-
             if (array == null)
             {
                 throw new NullReferenceException("Массив null");
             }
 
+            CheckIndex(arrayIndex, array.Length);
+
             if (Count > array.Length - arrayIndex)
             {
-                throw new ArgumentException("Размер копируемого списка составляет " + Count
-                    + ", что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
+                throw new ArgumentException("Размер копируемого списка составляет " + Count + ", " +
+                    "что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
             }
 
             Array.Copy(items, 0, array, arrayIndex, Count);
@@ -174,9 +166,11 @@ namespace ArrayList
 
         public bool Remove(T o)
         {
-            if (IndexOf(o) != -1)
+            int index = IndexOf(o);
+
+            if (index != -1)
             {
-                RemoveAt(IndexOf(o));
+                RemoveAt(index);
                 return true;
             }
 
@@ -209,8 +203,13 @@ namespace ArrayList
 
             if (Count / (double)items.Length <= epsilon)
             {
-                Capacity = Count;
+                Array.Resize(ref items, Count);
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Join(", ", items);
         }
     }
 }
