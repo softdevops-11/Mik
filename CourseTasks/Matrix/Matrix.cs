@@ -8,7 +8,7 @@ namespace Matrix
     {
         private Vector[] rows;
 
-        public Matrix(int columnsCount, int rowsCount)
+        public Matrix(int rowsCount, int columnsCount)
         {
             if (columnsCount <= 0)
             {
@@ -44,13 +44,13 @@ namespace Matrix
         {
             if (array.GetLength(0) <= 0)
             {
-                throw new ArgumentException("Количество столбцов в матрице должно быть > 0, сейчас равно: "
+                throw new ArgumentException("Количество строк в матрице должно быть > 0, сейчас равно: "
                     + array.GetLength(0), nameof(array));
             }
 
             if (array.GetLength(1) <= 0)
             {
-                throw new ArgumentException("Количество строк в матрице должно быть > 0, сейчас равно: "
+                throw new ArgumentException("Количество столбцов в матрице должно быть > 0, сейчас равно: "
                     + array.GetLength(1), nameof(array));
             }
 
@@ -71,7 +71,7 @@ namespace Matrix
         {
             if (vectors.Length <= 0)
             {
-                throw new ArgumentException("Количество столбцов в векторе должно быть > 0, сейчас равно: "
+                throw new ArgumentException("Количество строк в векторе должно быть > 0, сейчас равно: "
                     + vectors.Length, nameof(vectors));
             }
 
@@ -100,6 +100,11 @@ namespace Matrix
             }
         }
 
+        internal void Substract(Matrix matrix4)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetRowsCount()
         {
             return rows.Length;
@@ -110,11 +115,11 @@ namespace Matrix
             return rows[0].GetSize();
         }
 
-        public void SetRowVector(int index, Vector vector)
+        public void SetRow(int index, Vector vector)
         {
             if (index < 0 || index >= rows.Length)
             {
-                throw new IndexOutOfRangeException("Индекс столбца вне размеров матрицы, должен быть в пределах: [0, "
+                throw new IndexOutOfRangeException("Индекс строки вне размеров матрицы, должен быть в пределах: [0, "
                     + (rows.Length - 1) + "], сейчас он равен: " + index);
             }
 
@@ -125,7 +130,7 @@ namespace Matrix
         {
             if (index < 0 || index >= rows.Length)
             {
-                throw new IndexOutOfRangeException("Индекс столбца вне размеров матрицы, должен быть в пределах: [0, "
+                throw new IndexOutOfRangeException("Индекс строки вне размеров матрицы, должен быть в пределах: [0, "
                     + (rows.Length - 1) + "], сейчас он равен: " + index);
             }
 
@@ -134,10 +139,10 @@ namespace Matrix
 
         public Vector GetColumn(int index)
         {
-            if (index < 0 || index >= rows[0].GetSize())
+            if (index < 0 || index >= GetColumnsCount())
             {
-                throw new IndexOutOfRangeException("Индекс строки вне размеров матрицы, должен быть в пределах: [0, "
-                    + (rows[0].GetSize() - 1) + "], сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Индекс столбца вне размеров матрицы, должен быть в пределах: [0, "
+                    + (GetColumnsCount() - 1) + "], сейчас он равен: " + index);
             }
 
             Vector columnVector = new Vector(GetRowsCount());
@@ -156,26 +161,13 @@ namespace Matrix
 
             for (int i = 0; i < vectors.Length; i++)
             {
-                vectors[i] = new Vector(GetRowsCount());
+                vectors[i] = GetColumn(i);
             }
 
-            for (int i = 0; i < GetColumnsCount(); i++)
-            {
-                for (int j = 0; j < GetRowsCount(); j++)
-                {
-                    vectors[i].SetElement(j, rows[j].GetElement(i));
-                }
-            }
-
-            rows = new Vector[GetColumnsCount()];
-
-            for (int i = 0; i < vectors.Length; i++)
-            {
-                rows[i] = new Vector(vectors[i]);
-            }
+            rows = vectors;
         }
 
-        public void MultiplyOnScalar(double scalar)
+        public void MultiplyByScalar(double scalar)
         {
             foreach (Vector vector in rows)
             {
@@ -183,12 +175,12 @@ namespace Matrix
             }
         }
 
-        public Vector MultiplyOnVector(Vector vector)
+        public Vector MultiplyByVector(Vector vector)
         {
             if (vector.GetSize() != GetColumnsCount())
             {
                 throw new ArgumentException("Умножение невозможно, размерность вектора не равна количеству столбцов матрицы, сейчас равна: "
-                    + vector.GetSize(), nameof(vector));
+                    + vector.GetSize() + ", а количество столбцов матрицы равно: " + GetColumnsCount(), nameof(vector));
             }
 
             Vector result = new Vector(GetRowsCount());
@@ -206,13 +198,13 @@ namespace Matrix
             if (GetColumnsCount() != matrix.GetColumnsCount())
             {
                 throw new ArgumentException("Сложение невозможно, количество столбцов матриц не совпадает, сейчас количество равно: "
-                    + matrix.GetColumnsCount(), nameof(matrix));
+                    + matrix.GetColumnsCount() + ", а количество столбцов исходной матрицы равно: " + GetColumnsCount(), nameof(matrix));
             }
 
             if (GetRowsCount() != matrix.GetRowsCount())
             {
                 throw new ArgumentException("Сложение невозможно, количество строк матриц не совпадает, сейчас количество равно: "
-                    + matrix.GetRowsCount(), nameof(matrix));
+                    + matrix.GetRowsCount() + ", а количество строк исходной матрицы равно: " + GetRowsCount(), nameof(matrix));
             }
 
             for (int i = 0; i < GetRowsCount(); i++)
@@ -221,18 +213,18 @@ namespace Matrix
             }
         }
 
-        public void Substract(Matrix matrix)
+        public void Subtsract(Matrix matrix)
         {
             if (GetColumnsCount() != matrix.GetColumnsCount())
             {
                 throw new ArgumentException("Вычитание невозможно, количество столбцов матриц не совпадает, сейчас количество равно: "
-                    + matrix.GetColumnsCount(), nameof(matrix));
+                    + matrix.GetColumnsCount() + ", а количество столбцов исходной матрицы равно: " + GetColumnsCount(), nameof(matrix));
             }
 
             if (GetRowsCount() != matrix.GetRowsCount())
             {
                 throw new ArgumentException("Вычитание невозможно, количество строк матриц не совпадает, сейчас количество равно: "
-                    + matrix.GetRowsCount(), nameof(matrix));
+                    + matrix.GetRowsCount() + ", а количество строк исходной матрицы равно: " + GetRowsCount(), nameof(matrix));
             }
 
             for (int i = 0; i < GetRowsCount(); i++)
@@ -252,21 +244,21 @@ namespace Matrix
             double epsilon = 1E-9;
             Matrix determinantMatrix = new Matrix(rows);
 
-            for (int k = 1; k < GetRowsCount(); k++)
+            for (int i = 1; i < GetRowsCount(); i++)
             {
                 int countZero = 0;
 
-                if (Math.Abs(determinantMatrix.rows[k - 1].GetElement(k - 1)) < epsilon)
+                if (Math.Abs(determinantMatrix.rows[i - 1].GetElement(i - 1)) < epsilon)
                 {
-                    for (int i = k; i < GetRowsCount(); i++)
+                    for (int j = i; j < GetRowsCount(); j++)
                     {
-                        if (Math.Abs(determinantMatrix.rows[i].GetElement(k - 1)) > epsilon)
+                        if (Math.Abs(determinantMatrix.rows[j].GetElement(i - 1)) > epsilon)
                         {
-                            for (int j = k - 1; j < GetRowsCount(); j++)
+                            for (int k = i - 1; k < GetRowsCount(); k++)
                             {
-                                double temp = determinantMatrix.rows[k - 1].GetElement(j);
-                                determinantMatrix.rows[k - 1].SetElement(j, determinantMatrix.rows[i].GetElement(j));
-                                determinantMatrix.rows[i].SetElement(j, temp);
+                                double temp = determinantMatrix.rows[i - 1].GetElement(k);
+                                determinantMatrix.rows[i - 1].SetElement(k, determinantMatrix.rows[j].GetElement(k));
+                                determinantMatrix.rows[j].SetElement(k, temp);
                             }
 
                             break;
@@ -276,15 +268,15 @@ namespace Matrix
                     }
                 }
 
-                if (countZero != GetRowsCount() - k)
+                if (countZero != GetRowsCount() - i)
                 {
-                    for (int j = k; j < GetRowsCount(); j++)
+                    for (int j = i; j < GetRowsCount(); j++)
                     {
-                        for (int i = k; i < GetRowsCount(); i++)
+                        for (int k = i; k < GetRowsCount(); k++)
                         {
-                            double temp = determinantMatrix.rows[j].GetElement(i) - determinantMatrix.rows[k - 1].GetElement(i)
-                                * determinantMatrix.rows[j].GetElement(k - 1) / determinantMatrix.rows[k - 1].GetElement(k - 1);
-                            determinantMatrix.rows[j].SetElement(i, temp);
+                            double temp = determinantMatrix.rows[j].GetElement(k) - determinantMatrix.rows[i - 1].GetElement(k)
+                                * determinantMatrix.rows[j].GetElement(i - 1) / determinantMatrix.rows[i - 1].GetElement(i - 1);
+                            determinantMatrix.rows[j].SetElement(k, temp);
                         }
                     }
                 }
@@ -320,13 +312,13 @@ namespace Matrix
         {
             if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount())
             {
-                throw new ArgumentException("Сложение невозможно, количество столбцов матриц не совпадает, сейчас количеcтво столбцов первой матрицы равно: "
+                throw new ArgumentException("Сложение невозможно, количество столбцов матриц не совпадает, сейчас количество столбцов первой матрицы равно: "
                     + matrix1.GetColumnsCount() + " второй: " + matrix2.GetColumnsCount(), nameof(matrix1));
             }
 
             if (matrix1.GetRowsCount() != matrix2.GetRowsCount())
             {
-                throw new ArgumentException("Сложение невозможно, количество строк матриц не совпадает, сейчас количеcтво строк первой матрицы равно: "
+                throw new ArgumentException("Сложение невозможно, количество строк матриц не совпадает, сейчас количество строк первой матрицы равно: "
                     + matrix1.GetRowsCount() + " второй: " + matrix2.GetRowsCount(), nameof(matrix1));
             }
 
@@ -340,13 +332,13 @@ namespace Matrix
         {
             if (matrix1.GetColumnsCount() != matrix2.GetColumnsCount())
             {
-                throw new ArgumentException("Вычитание невозможно, количество столбцов матриц не совпадает, сейчас количеcтво столбцов первой матрицы равно: "
+                throw new ArgumentException("Вычитание невозможно, количество столбцов матриц не совпадает, сейчас количество столбцов первой матрицы равно: "
                     + matrix1.GetColumnsCount() + " второй: " + matrix2.GetColumnsCount(), nameof(matrix1));
             }
 
             if (matrix1.GetRowsCount() != matrix2.GetRowsCount())
             {
-                throw new ArgumentException("Вычитание невозможно, количество строк матриц не совпадает, сейчас количеcтво строк первой матрицы равно: "
+                throw new ArgumentException("Вычитание невозможно, количество строк матриц не совпадает, сейчас количество строк первой матрицы равно: "
                     + matrix1.GetRowsCount() + " второй: " + matrix2.GetRowsCount(), nameof(matrix1));
             }
 
@@ -360,8 +352,8 @@ namespace Matrix
         {
             if (matrix1.GetColumnsCount() != matrix2.GetRowsCount())
             {
-                throw new ArgumentException("Умножение невозможно, количество строк матрицы 1 не равно количеству столбцов матрицы 2, сейчас количество строк матрицы 1 равно: "
-                    + matrix1.GetRowsCount() + " сейчас количество столбцов матрицы 2 равно:" + matrix2.GetColumnsCount(), nameof(matrix1));
+                throw new ArgumentException("Умножение невозможно, количество столбцов матрицы 1 не равно количеству строк матрицы 2, сейчас количество столбцов матрицы 1 равно: "
+                    + matrix1.GetColumnsCount() + " сейчас количество строк матрицы 2 равно:" + matrix2.GetRowsCount(), nameof(matrix1));
             }
 
             Matrix resultMatrix = new Matrix(matrix1.GetRowsCount(), matrix2.GetColumnsCount());

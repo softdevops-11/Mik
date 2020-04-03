@@ -34,16 +34,16 @@ namespace Matrix
             Matrix matrix6 = new Matrix(matrix7);
             Console.WriteLine(matrix2);
 
-            matrix2.SetRowVector(0, new Vector(vector));
+            matrix2.SetRow(0, new Vector(vector));
             Console.WriteLine("Первая сторка матрицы : {0}", matrix2.GetRow(0));
             Console.WriteLine("Первый столбец матрицы : {0}", matrix2.GetColumn(0));
 
             matrix2.Transpose();
             Console.WriteLine("Транспонирование матрицы: {0}", matrix2);
 
-            matrix3.MultiplyOnScalar(5);
+            matrix3.MultiplyByScalar(5);
             Console.WriteLine("Произведение матрицы на скаляр: {0}", matrix3);
-            Console.WriteLine("Произведение матрицы на вектор: {0}", matrix3.MultiplyOnVector(new Vector(vector)));
+            Console.WriteLine("Произведение матрицы на вектор: {0}", matrix3.MultiplyByVector(new Vector(vector)));
 
             matrix2.Add(matrix4);
             Console.WriteLine("Сумма матриц: {0}", matrix2);

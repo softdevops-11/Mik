@@ -7,7 +7,8 @@ namespace BinaryTree
     {
         private static void Main()
         {
-            BinaryTree<int> tree = new BinaryTree<int>(10);
+            BinaryTree<int> tree = new BinaryTree<int>();
+            tree.Add(10);
             tree.Add(13);
             tree.Add(7);
             tree.Add(15);
@@ -21,9 +22,9 @@ namespace BinaryTree
             tree.Add(12);
             tree.Add(11);
 
-            bool isNode = tree.FindNode(16);
+            bool isNode = tree.FindNode(2);
 
-            int count = tree.countNodes;
+            int count = tree.Count;
             tree.DeleteNode(10);
 
             IEnumerable<int> setOfNodes = tree.GetAroundInWide();

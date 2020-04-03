@@ -8,10 +8,6 @@
 
         public T Data { get; set; }
 
-        public BinaryTreeNode()
-        {
-        }
-
         public BinaryTreeNode(T data)
         {
             Data = data;

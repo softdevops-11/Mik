@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace List
 {
@@ -39,8 +40,8 @@ namespace List
         {
             if (index >= Count || index < 0)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "], "
-                    + "сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "]," +
+                    " сейчас он равен: " + index);
             }
 
             return FindNodeByIndex(index).Data;
@@ -50,46 +51,42 @@ namespace List
         {
             if (index >= Count || index < 0)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "],"
-                    + " сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "], " +
+                    "сейчас он равен: " + index);
             }
 
-            ListNode<T> node = FindNodeByIndex(index);
-            T temp = node.Data;
-            node.Data = data;
+            ListNode<T> current = FindNodeByIndex(index);
+            T temporaryData = current.Data;
+            current.Data = data;
 
-            return temp;
+            return temporaryData;
         }
 
         public T DeleteByIndex(int index)
         {
             if (index >= Count || index < 0)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "], "
-                    + "сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "]," +
+                    " сейчас он равен: " + index);
             }
-
-            T temp;
 
             if (index == 0)
             {
                 return DeleteFirstItem();
             }
 
-            ListNode<T> node = FindNodeByIndex(index - 1);
-            temp = node.Next.Data;
-            node.Next = node.Next.Next;
+            ListNode<T> previous = FindNodeByIndex(index - 1);
+            T data = previous.Next.Data;
+            previous.Next = previous.Next.Next;
             Count--;
 
-            return temp;
+            return data;
         }
 
         public void AddToHead(T data)
         {
-            ListNode<T> item = new ListNode<T>(data)
-            {
-                Next = head
-            };
+            ListNode<T> item = new ListNode<T>(data, head);
+
             head = item;
             Count++;
         }
@@ -98,8 +95,8 @@ namespace List
         {
             if (index > Count || index < 0)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "],"
-                    + " сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах: [0, " + (Count - 1) + "], " +
+                    "сейчас он равен: " + index);
             }
 
             if (index == 0)
@@ -109,33 +106,35 @@ namespace List
             }
 
             ListNode<T> item = new ListNode<T>(data);
-            ListNode<T> node = FindNodeByIndex(index - 1);
-            item.Next = node.Next;
-            node.Next = item;
+            ListNode<T> previous = FindNodeByIndex(index - 1);
+            item.Next = previous.Next;
+            previous.Next = item;
             Count++;
         }
 
         public bool DeleteByValue(T data)
         {
-            if (head != null)
+            if (head == null)
             {
-                if (Equals(head.Data, data))
+                return false;
+            }
+
+            if (Equals(head.Data, data))
+            {
+                head = head.Next;
+                Count--;
+
+                return true;
+            }
+
+            for (ListNode<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
+            {
+                if (Equals(current.Data, data))
                 {
-                    head = head.Next;
+                    previous.Next = current.Next;
                     Count--;
 
                     return true;
-                }
-
-                for (ListNode<T> current = head.Next, previous = head; current != null; previous = current, current = current.Next)
-                {
-                    if (Equals(current.Data, data))
-                    {
-                        previous.Next = current.Next;
-                        Count--;
-
-                        return true;
-                    }
                 }
             }
 
@@ -149,11 +148,11 @@ namespace List
                 throw new InvalidOperationException("Список пуст");
             }
 
-            T temp = head.Data;
+            T data = head.Data;
             head = head.Next;
             Count--;
 
-            return temp;
+            return data;
         }
 
         public SingleLinkedList<T> Copy()
@@ -186,7 +185,7 @@ namespace List
             return newList;
         }
 
-        public void Inverse()
+        public void Reverse()
         {
             ListNode<T> current = head;
             ListNode<T> previous = null;
@@ -201,6 +200,18 @@ namespace List
 
             head = previous;
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (ListNode<T> current = head; current != null; current = current.Next)
+            {
+                sb.Append(current.Data);
+                sb.Append("-> ");
+            }
+
+            return sb.ToString();
+        }
     }
 }
-

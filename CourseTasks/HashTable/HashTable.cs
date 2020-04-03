@@ -21,9 +21,10 @@ namespace HashTable
 
         public HashTable(int capacity)
         {
-            if (capacity < 0)
+            if (capacity <= 0)
             {
-                throw new ArgumentOutOfRangeException("Размерность массива должна быть >= 0 , сейчас равна: " + capacity);
+                throw new ArgumentOutOfRangeException(nameof(capacity), "Размерность массива должна быть > 0 ," +
+                    " сейчас равна: " + capacity);
             }
 
             items = new List<T>[capacity];
@@ -57,6 +58,7 @@ namespace HashTable
         {
             Array.Clear(items, 0, items.Length);
             Count = 0;
+            modCount++;
         }
 
         public bool Contains(T o)
@@ -70,9 +72,8 @@ namespace HashTable
         {
             int index = GetIndex(o);
 
-            if (items[index] != null && items[index].Contains(o))
+            if (items[index] != null && items[index].Remove(o))
             {
-                items[index].Remove(o);
                 modCount++;
                 Count--;
                 return true;
@@ -96,8 +97,8 @@ namespace HashTable
 
             if (Count > array.Length - arrayIndex)
             {
-                throw new ArgumentException("Размер копируемого списка составляет " + Count + ", " +
-                    "что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
+                throw new ArgumentException("Размер копируемого списка составляет " + Count + "," +
+                    " что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
             }
 
             int index = arrayIndex;
@@ -136,3 +137,5 @@ namespace HashTable
         }
     }
 }
+
+

@@ -18,7 +18,7 @@ namespace List
             SingleLinkedList<int> newList = list.Copy();
             newList.DeleteFirstItem();
 
-            list.Inverse();
+            list.Reverse();
             Console.WriteLine(list.GetHeadData());
             Console.WriteLine(list.DeleteFirstItem());
             Console.WriteLine(list.DeleteByIndex(2));
