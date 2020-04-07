@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace ArrayList
 {
@@ -19,15 +20,10 @@ namespace ArrayList
             get => items.Length;
             set
             {
-                if (value < items.Length)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Размерность массива должна быть >= " 
-                        + items.Length + ", сейчас равна: " + value);
-                }
-
                 if (value < Count)
                 {
-                    Count = value;
+                    throw new ArgumentOutOfRangeException(nameof(value), "Размерность массива должна быть >= "
+                        + Count + ", сейчас равна: " + value);
                 }
 
                 Array.Resize(ref items, value);
@@ -48,6 +44,7 @@ namespace ArrayList
 
                 items[index] = value;
             }
+
         }
 
         public ArrayList()
@@ -59,7 +56,8 @@ namespace ArrayList
         {
             if (capacity < 0)
             {
-                throw new ArgumentOutOfRangeException("Размерность массива должна быть >= 0 , сейчас равна: " + capacity);
+                throw new ArgumentOutOfRangeException(nameof(capacity), "Размерность массива должна быть >= 0 ," +
+                    " сейчас равна: " + capacity);
             }
 
             items = new T[capacity];
@@ -69,8 +67,8 @@ namespace ArrayList
         {
             if (index < 0 || index >= length)
             {
-                throw new IndexOutOfRangeException("Неверное значение индекса, должен быть в пределах:" + 
-                    " [0, " + (length - 1) + "] , сейчас он равен: " + index);
+                throw new IndexOutOfRangeException("Неверное значение индекса, индекс должен быть в пределах: " +
+                    "[0, " + (length - 1) + "] , сейчас он равен: " + index);
             }
         }
 
@@ -87,15 +85,25 @@ namespace ArrayList
             return -1;
         }
 
+        private void IncreaseToDoubleCapacity()
+        {
+            if (Count >= items.Length)
+            {
+                if (items.Length == 0)
+                {
+                    Capacity = 1;
+                }
+                else
+                {
+                    Capacity = items.Length * 2;
+                }
+            }
+        }
+
         public void Insert(int index, T o)
         {
             CheckIndex(index, Count + 1);
-
-            if (Count >= items.Length)
-            {
-                Capacity = Count * 2;
-            }
-
+            IncreaseToDoubleCapacity();
             Array.Copy(items, index, items, index + 1, Count - index);
             items[index] = o;
             Count++;
@@ -112,24 +120,13 @@ namespace ArrayList
             }
 
             Count--;
-            items[Count] = default(T);
+            items[Count] = default;
             modCount++;
         }
 
         public void Add(T o)
         {
-            if (Count >= items.Length)
-            {
-                if (items.Length == 0)
-                {
-                    Capacity = 1;
-                }
-                else
-                {
-                    Capacity = items.Length * 2;
-                }
-            }
-
+            IncreaseToDoubleCapacity();
             items[Count] = o;
             Count++;
             modCount++;
@@ -137,8 +134,10 @@ namespace ArrayList
 
         public void Clear()
         {
-            Array.Resize(ref items, 0);
+            Array.Clear(items, 0, Count);
             Count = 0;
+            TrimExcess();
+            modCount++;
         }
 
         public bool Contains(T o)
@@ -150,7 +149,7 @@ namespace ArrayList
         {
             if (array == null)
             {
-                throw new NullReferenceException("Массив null");
+                throw new ArgumentNullException(nameof(array), "Массив null");
             }
 
             CheckIndex(arrayIndex, array.Length);
@@ -203,13 +202,36 @@ namespace ArrayList
 
             if (Count / (double)items.Length <= epsilon)
             {
-                Array.Resize(ref items, Count);
+                Capacity = Count;
             }
         }
 
         public override string ToString()
         {
-            return string.Join(", ", items);
+            StringBuilder sb = new StringBuilder("[");
+
+            for (int i = 0; i < Count; i++)
+            {
+                if (items[i] == null)
+                {
+                    sb.Append("null");
+                }
+                else
+                {
+                    sb.Append(items[i]);
+                }
+
+                sb.Append(", ");
+            }
+
+            if (sb.Length > 1)
+            {
+                sb.Remove(sb.Length - 2, 2);
+            }
+
+            sb.Append("]");
+
+            return sb.ToString();
         }
     }
 }

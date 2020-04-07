@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace LambdaFunctions
 {
     internal class LambdaFunctionsProgram
     {
-        private static void Main()
+        static void Main()
         {
-            List<Person> persons = new List<Person>
+            var persons = new List<Person>
             {
                 new Person("Валерий", 22),
                 new Person("Иван", 28),
@@ -24,41 +24,41 @@ namespace LambdaFunctions
                 new Person("Дмитрий", 17)
             };
 
-            foreach (Person p in persons)
+            foreach (var p in persons)
             {
                 Console.WriteLine("Имя: " + p.Name + ". Возраст: " + p.Age);
             }
 
             Console.WriteLine();
 
-            List<string> uniquePersonsNames = persons
+            var uniquePersonsNames = persons
                 .Select(p => p.Name)
                 .Distinct()
                 .ToList();
-            string allNamesString = string.Join(", ", uniquePersonsNames);
+            var allNamesString = string.Join(", ", uniquePersonsNames);
             Console.WriteLine("Имена: " + allNamesString + ".");
             Console.WriteLine();
 
-            List<Person> youngPersons = persons
+            var youngPersons = persons
                 .Where(p => p.Age < 18)
                 .ToList();
-            string youngNamesString = string.Join(", ", youngPersons.Select(p => p.Name));
-            double averageAge = youngPersons.Average(p => p.Age);
+            var youngNamesString = string.Join(", ", youngPersons.Select(p => p.Name));
+            var averageAge = youngPersons.Average(p => p.Age);
             Console.WriteLine("Имена молодых людей: " + youngNamesString + ". Их средний возраст: " + averageAge + " лет. ");
             Console.WriteLine();
 
-            Dictionary<string, double> personsByName = persons
+            var personsByName = persons
                 .GroupBy(p => p.Name)
                 .ToDictionary(p => p.Key, p => p.Average(k => k.Age));
 
-            foreach (KeyValuePair<string, double> p in personsByName)
+            foreach (var p in personsByName)
             {
                 Console.WriteLine("Имя: " + p.Key + ". Средний возраст: " + p.Value);
             }
 
             Console.WriteLine();
 
-            string sortedNames = string.Join(", ", persons
+            var sortedNames = string.Join(", ", persons
                 .Where(p => p.Age >= 20 && p.Age <= 45)
                 .OrderByDescending(p => p.Age)
                 .Select(p => p.Name));

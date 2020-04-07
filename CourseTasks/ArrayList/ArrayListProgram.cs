@@ -17,21 +17,12 @@ namespace ArrayList
             list.Add(9);
             list.RemoveAt(2);
 
-            foreach (int value in list)
-            {
-                Console.WriteLine(value);
-            }
-
+            Console.WriteLine(list);
             Console.WriteLine(list.Remove(125));
             Console.WriteLine(list.IndexOf(9));
             Console.WriteLine();
             list.Insert(1, 100);
-
-            foreach (int value in list)
-            {
-                Console.WriteLine(value);
-            }
-
+            Console.WriteLine(list);
             Console.WriteLine();
             Console.WriteLine(list.Contains(100));
             Console.WriteLine();
@@ -56,6 +47,7 @@ namespace ArrayList
             };
 
             listNew.TrimExcess();
+            Console.WriteLine(listNew);
 
             Console.ReadLine();
         }
