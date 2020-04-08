@@ -44,7 +44,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.21995F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.78005F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 213F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 214F));
             this.tableLayoutPanel1.Controls.Add(this.inputComboBoxLabel, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.inputComboBox, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.inputTextBox, 0, 2);
@@ -64,13 +64,13 @@
             // 
             // inputComboBoxLabel
             // 
-            this.inputComboBoxLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.inputComboBoxLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.inputComboBoxLabel.AutoSize = true;
             this.inputComboBoxLabel.Location = new System.Drawing.Point(3, 0);
             this.inputComboBoxLabel.Name = "inputComboBoxLabel";
-            this.inputComboBoxLabel.Size = new System.Drawing.Size(196, 33);
+            this.inputComboBoxLabel.Size = new System.Drawing.Size(195, 33);
             this.inputComboBoxLabel.TabIndex = 7;
             this.inputComboBoxLabel.Text = "Шкала преобразуемой температуры";
             this.inputComboBoxLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -78,6 +78,7 @@
             // inputComboBox
             // 
             this.inputComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.inputComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.inputComboBox.FormattingEnabled = true;
             this.inputComboBox.Items.AddRange(new object[] {
             "Градус Цельсия",
@@ -85,7 +86,7 @@
             "Градус Фаренгейта"});
             this.inputComboBox.Location = new System.Drawing.Point(3, 54);
             this.inputComboBox.Name = "inputComboBox";
-            this.inputComboBox.Size = new System.Drawing.Size(196, 21);
+            this.inputComboBox.Size = new System.Drawing.Size(195, 21);
             this.inputComboBox.TabIndex = 0;
             // 
             // inputTextBox
@@ -93,15 +94,15 @@
             this.inputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.inputTextBox.Location = new System.Drawing.Point(3, 116);
             this.inputTextBox.Name = "inputTextBox";
-            this.inputTextBox.Size = new System.Drawing.Size(196, 20);
+            this.inputTextBox.Size = new System.Drawing.Size(195, 20);
             this.inputTextBox.TabIndex = 4;
             // 
             // convertButton
             // 
-            this.convertButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.convertButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.convertButton.Location = new System.Drawing.Point(205, 159);
+            this.convertButton.Location = new System.Drawing.Point(204, 159);
             this.convertButton.Name = "convertButton";
             this.convertButton.Size = new System.Drawing.Size(164, 33);
             this.convertButton.TabIndex = 2;
@@ -113,20 +114,20 @@
             // 
             this.outputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.outputTextBox.Enabled = false;
-            this.outputTextBox.Location = new System.Drawing.Point(375, 116);
+            this.outputTextBox.Location = new System.Drawing.Point(374, 116);
             this.outputTextBox.Name = "outputTextBox";
-            this.outputTextBox.Size = new System.Drawing.Size(208, 20);
+            this.outputTextBox.Size = new System.Drawing.Size(209, 20);
             this.outputTextBox.TabIndex = 3;
             // 
             // outputComboBoxLabel
             // 
-            this.outputComboBoxLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.outputComboBoxLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.outputComboBoxLabel.AutoSize = true;
-            this.outputComboBoxLabel.Location = new System.Drawing.Point(375, 0);
+            this.outputComboBoxLabel.Location = new System.Drawing.Point(374, 0);
             this.outputComboBoxLabel.Name = "outputComboBoxLabel";
-            this.outputComboBoxLabel.Size = new System.Drawing.Size(208, 33);
+            this.outputComboBoxLabel.Size = new System.Drawing.Size(209, 33);
             this.outputComboBoxLabel.TabIndex = 8;
             this.outputComboBoxLabel.Text = "Шкала преобразованной температуры";
             this.outputComboBoxLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -134,14 +135,15 @@
             // outputComboBox
             // 
             this.outputComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.outputComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.outputComboBox.FormattingEnabled = true;
             this.outputComboBox.Items.AddRange(new object[] {
             "Градус Цельсия",
             "Кельвин",
             "Градус Фаренгейта"});
-            this.outputComboBox.Location = new System.Drawing.Point(375, 54);
+            this.outputComboBox.Location = new System.Drawing.Point(374, 54);
             this.outputComboBox.Name = "outputComboBox";
-            this.outputComboBox.Size = new System.Drawing.Size(208, 21);
+            this.outputComboBox.Size = new System.Drawing.Size(209, 21);
             this.outputComboBox.TabIndex = 9;
             // 
             // TemperatureForm
@@ -150,6 +152,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 284);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "TemperatureForm";
             this.Text = "Конвертор температур";
             this.Load += new System.EventHandler(this.TemperatureForm_Load);

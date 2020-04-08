@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversionScales\KelvinScales.cs" />
+    <Compile Include="ConversionScales\FahrenheitScales.cs" />
+    <Compile Include="ConversionScales\CelsiusScales.cs" />
+    <Compile Include="IScales.cs" />
     <Compile Include="TemperatureForm.cs">
       <SubType>Form</SubType>
     </Compile>
