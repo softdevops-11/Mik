@@ -1,13 +1,21 @@
-﻿namespace Temperature.ConversationScales
+﻿namespace Temperature.ConversionScales
 {
-    public class KelvinScales : IScales
+    public class KelvinScales : IScale
     {
-        public double GetConversationToScale(double initialTemperatureInCelsius)
+        public string NameScale
+        {
+            get
+            {
+                return "Кельвин";
+            }
+        }
+
+        public double ConvertToScale(double initialTemperatureInCelsius)
         {
             return initialTemperatureInCelsius + 273.15;
         }
 
-        public double GetConversationToCelsius(double initialTemperature)
+        public double ConvertToCelsius(double initialTemperature)
         {
             return initialTemperature - 273.15;
         }

@@ -22,7 +22,7 @@ namespace BinaryTree
             tree.Add(12);
             tree.Add(11);
 
-            bool isNode = tree.FindNode(2);
+            bool isNode = tree.Contains(2);
 
             int count = tree.Count;
             tree.DeleteNode(10);

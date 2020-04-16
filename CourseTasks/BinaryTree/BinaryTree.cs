@@ -4,22 +4,19 @@ namespace BinaryTree
 {
     internal class BinaryTree<T>
     {
-        private Comparer<T> comparer;
+        private readonly Comparer<T> comparer;
 
-        private BinaryTreeNode<T> RootNode { get; set; }
+        private BinaryTreeNode<T> rootNode;
 
         public int Count { get; private set; }
 
         public BinaryTree()
         {
-            RootNode = null;
             comparer = Comparer<T>.Default;
         }
 
         public BinaryTree(Comparer<T> comparer)
         {
-            RootNode = null;
-
             if (comparer != null)
             {
                 this.comparer = comparer;
@@ -32,14 +29,14 @@ namespace BinaryTree
 
         public void Add(T data)
         {
-            if (RootNode == null)
+            if (rootNode == null)
             {
-                RootNode = new BinaryTreeNode<T>(data);
+                rootNode = new BinaryTreeNode<T>(data);
                 Count++;
                 return;
             }
 
-            BinaryTreeNode<T> node = RootNode;
+            BinaryTreeNode<T> node = rootNode;
 
             while (node != null)
             {
@@ -72,8 +69,11 @@ namespace BinaryTree
             }
         }
 
-        private void FindNodeByData(T data, ref BinaryTreeNode<T> foundNode, ref BinaryTreeNode<T> parentNode)
+        private BinaryTreeNode<T>[] FindNodeByData(T data)
         {
+            BinaryTreeNode<T> foundNode = rootNode;
+            BinaryTreeNode<T> parentNode = null;
+
             while (foundNode != null)
             {
                 int comparisonResult = comparer.Compare(data, foundNode.Data);
@@ -102,39 +102,34 @@ namespace BinaryTree
                     foundNode = foundNode.Right;
                 }
             }
+
+            return new BinaryTreeNode<T>[] { foundNode, parentNode };
         }
 
-        public bool FindNode(T data)
+        public bool Contains(T data)
         {
-            if (RootNode == null)
+            if (rootNode == null)
             {
                 return false;
             }
 
-            BinaryTreeNode<T> foundNode = RootNode;
-            BinaryTreeNode<T> parentNode = null;
+            BinaryTreeNode<T>[] node = FindNodeByData(data);
+            BinaryTreeNode<T> foundNode = node[0];
+            BinaryTreeNode<T> parentNode = node[1];
 
-            FindNodeByData(data, ref foundNode, ref parentNode);
-
-            if (foundNode != null)
-            {
-                return true;
-            }
-
-            return false;
+            return foundNode != null;
         }
 
         public void DeleteNode(T data)
         {
-            if (RootNode == null)
+            if (rootNode == null)
             {
                 return;
             }
 
-            BinaryTreeNode<T> deleteNode = RootNode;
-            BinaryTreeNode<T> parentNode = null;
-
-            FindNodeByData(data, ref deleteNode, ref parentNode);
+            BinaryTreeNode<T>[] node = FindNodeByData(data);
+            BinaryTreeNode<T> deleteNode = node[0];
+            BinaryTreeNode<T> parentNode = node[1];
 
             if (deleteNode == null)
             {
@@ -145,7 +140,7 @@ namespace BinaryTree
             {
                 if (parentNode == null)
                 {
-                    RootNode = null;
+                    rootNode = null;
                     Count--;
                     return;
                 }
@@ -165,7 +160,7 @@ namespace BinaryTree
             {
                 if (parentNode == null)
                 {
-                    RootNode = deleteNode.Left;
+                    rootNode = deleteNode.Left;
                     Count--;
                     return;
                 }
@@ -185,7 +180,7 @@ namespace BinaryTree
             {
                 if (parentNode == null)
                 {
-                    RootNode = deleteNode.Right;
+                    rootNode = deleteNode.Right;
                     Count--;
                     return;
                 }
@@ -218,19 +213,14 @@ namespace BinaryTree
 
                 deleteNode.Data = minimumNode.Data;
                 Count--;
-                parentMinimumNode.Left = null;
-
-                if (minimumNode.Right != null)
-                {
-                    parentMinimumNode.Left = minimumNode.Right;
-                }
+                parentMinimumNode.Left = minimumNode.Right;
             }
 
         }
 
         public IEnumerable<T> GetAroundInWide()
         {
-            BinaryTreeNode<T> node = RootNode;
+            BinaryTreeNode<T> node = rootNode;
 
             if (node == null)
             {
@@ -259,10 +249,10 @@ namespace BinaryTree
 
         public IEnumerable<T> GetAroundInDeepWithRecursion()
         {
-            return GetAroundInDeepWithRecursion(RootNode);
+            return GetAroundInDeepWithRecursion(rootNode);
         }
 
-        public IEnumerable<T> GetAroundInDeepWithRecursion(BinaryTreeNode<T> node)
+        private IEnumerable<T> GetAroundInDeepWithRecursion(BinaryTreeNode<T> node)
         {
             if (node == null)
             {
@@ -273,7 +263,7 @@ namespace BinaryTree
 
             if (node.Left != null)
             {
-                foreach (T item in GetAroundInDeepWithRecursion(node.Left))
+                foreach (var item in GetAroundInDeepWithRecursion(node.Left))
                 {
                     yield return item;
                 }
@@ -281,7 +271,7 @@ namespace BinaryTree
 
             if (node.Right != null)
             {
-                foreach (T item in GetAroundInDeepWithRecursion(node.Right))
+                foreach (var item in GetAroundInDeepWithRecursion(node.Right))
                 {
                     yield return item;
                 }
@@ -290,7 +280,7 @@ namespace BinaryTree
 
         public IEnumerable<T> GetAroundInDeepWithoutRecursion()
         {
-            BinaryTreeNode<T> node = RootNode;
+            BinaryTreeNode<T> node = rootNode;
 
             if (node == null)
             {

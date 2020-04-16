@@ -85,7 +85,7 @@ namespace ArrayList
             return -1;
         }
 
-        private void IncreaseToDoubleCapacity()
+        private void IncreaseCapacity()
         {
             if (Count >= items.Length)
             {
@@ -103,8 +103,13 @@ namespace ArrayList
         public void Insert(int index, T o)
         {
             CheckIndex(index, Count + 1);
-            IncreaseToDoubleCapacity();
-            Array.Copy(items, index, items, index + 1, Count - index);
+            IncreaseCapacity();
+
+            if (index < Count)
+            {
+                Array.Copy(items, index, items, index + 1, Count - index);
+            }
+
             items[index] = o;
             Count++;
             modCount++;
@@ -126,7 +131,7 @@ namespace ArrayList
 
         public void Add(T o)
         {
-            IncreaseToDoubleCapacity();
+            IncreaseCapacity();
             items[Count] = o;
             Count++;
             modCount++;
@@ -136,7 +141,6 @@ namespace ArrayList
         {
             Array.Clear(items, 0, Count);
             Count = 0;
-            TrimExcess();
             modCount++;
         }
 
@@ -156,8 +160,8 @@ namespace ArrayList
 
             if (Count > array.Length - arrayIndex)
             {
-                throw new ArgumentException("Размер копируемого списка составляет " + Count + ", " +
-                    "что превышает размер остатка массива равного: " + (array.Length - arrayIndex), nameof(arrayIndex));
+                throw new ArgumentException("Размер копируемого списка составляет " + Count + ", что превышает размер остатка массива равного: " + (array.Length - arrayIndex)
+                    + ". Длина массива равна: " + array.Length + ". Индекс копирования равен: " + arrayIndex, nameof(arrayIndex));
             }
 
             Array.Copy(items, 0, array, arrayIndex, Count);

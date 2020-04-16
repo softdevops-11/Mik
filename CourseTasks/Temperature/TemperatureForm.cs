@@ -1,14 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Windows.Forms;
-using Temperature.ConversationScales;
+using System.Collections.Generic;
+using Temperature.ConversionScales;
 
 namespace Temperature
 {
     public partial class TemperatureForm : Form
     {
+        public List<IScale> scaleList = new List<IScale>() { new CelsiusScales(), new KelvinScales(), new FahrenheitScales() };
+
         public TemperatureForm()
         {
             InitializeComponent();
+
+            foreach (IScale o in scaleList)
+            {
+                outputComboBox.Items.Add(o.NameScale);
+                inputComboBox.Items.Add(o.NameScale);
+            }
         }
 
         private void TemperatureForm_Load(object sender, EventArgs e)
@@ -23,33 +33,8 @@ namespace Temperature
 
             if (isNumber)
             {
-                double temperatureInCelsius = 0;
-
-                switch (inputComboBox.SelectedIndex)
-                {
-                    case 0:
-                        temperatureInCelsius = new CelsiusScales().GetConversationToCelsius(temperature);
-                        break;
-                    case 1:
-                        temperatureInCelsius = new KelvinScales().GetConversationToCelsius(temperature);
-                        break;
-                    case 2:
-                        temperatureInCelsius = new FahrenheitScales().GetConversationToCelsius(temperature);
-                        break;
-                }
-
-                switch (outputComboBox.SelectedIndex)
-                {
-                    case 0:
-                        outputTextBox.Text = Convert.ToString(new CelsiusScales().GetConversationToScale(temperatureInCelsius));
-                        break;
-                    case 1:
-                        outputTextBox.Text = Convert.ToString(new KelvinScales().GetConversationToScale(temperatureInCelsius));
-                        break;
-                    case 2:
-                        outputTextBox.Text = Convert.ToString(new FahrenheitScales().GetConversationToScale(temperatureInCelsius));
-                        break;
-                }
+                double temperatureInCelsius = scaleList[inputComboBox.SelectedIndex].ConvertToCelsius(temperature);
+                outputTextBox.Text = Convert.ToString(scaleList[outputComboBox.SelectedIndex].ConvertToScale(temperatureInCelsius));
             }
             else
             {

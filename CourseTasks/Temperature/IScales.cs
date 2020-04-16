@@ -1,9 +1,12 @@
 ﻿namespace Temperature
 {
-    public interface IScales
+    public interface IScale
     {
-        double GetConversationToCelsius(double initialTemperature);
-        double GetConversationToScale(double initialTemperatureInCelsius);
+        string NameScale { get; }
+
+        double ConvertToCelsius(double initialTemperature);
+
+        double ConvertToScale(double initialTemperatureInCelsius);
     }
 }
 

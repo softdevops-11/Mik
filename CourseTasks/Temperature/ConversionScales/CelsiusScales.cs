@@ -1,13 +1,21 @@
-﻿namespace Temperature.ConversationScales
+﻿namespace Temperature.ConversionScales
 {
-    public class CelsiusScales : IScales
+    public class CelsiusScales : IScale
     {
-        public double GetConversationToScale(double initialTemperatureInCelsius)
+        public string NameScale
+        {
+            get
+            {
+                return "Градус Цельсия";
+            }
+        }
+
+        public double ConvertToScale(double initialTemperatureInCelsius)
         {
             return initialTemperatureInCelsius;
         }
 
-        public double GetConversationToCelsius(double initialTemperature)
+        public double ConvertToCelsius(double initialTemperature)
         {
             return initialTemperature;
         }
