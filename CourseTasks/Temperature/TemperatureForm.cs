@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Temperature.ConversionScales;
@@ -8,7 +7,7 @@ namespace Temperature
 {
     public partial class TemperatureForm : Form
     {
-        public List<IScale> scaleList = new List<IScale>() { new CelsiusScales(), new KelvinScales(), new FahrenheitScales() };
+        private List<IScale> scaleList = new List<IScale> { new CelsiusScale(), new KelvinScale(), new FahrenheitScale() };
 
         public TemperatureForm()
         {
@@ -16,8 +15,8 @@ namespace Temperature
 
             foreach (IScale o in scaleList)
             {
-                outputComboBox.Items.Add(o.NameScale);
-                inputComboBox.Items.Add(o.NameScale);
+                outputComboBox.Items.Add(o.Name);
+                inputComboBox.Items.Add(o.Name);
             }
         }
 
