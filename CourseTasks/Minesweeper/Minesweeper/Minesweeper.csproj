@@ -61,6 +61,7 @@
     <Compile Include="GUI\OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\Cell.cs" />
     <Compile Include="Logic\Field.cs" />
     <Compile Include="GUI\MinesweeperForm.cs">
       <SubType>Form</SubType>
@@ -69,7 +70,7 @@
       <DependentUpon>MinesweeperForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Logic\HighScoreComparer.cs" />
-    <Compile Include="Logic\HightScores.cs" />
+    <Compile Include="Logic\HighScores.cs" />
     <Compile Include="MinesweeperProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI\HightScoresForm.resx">
@@ -110,6 +111,7 @@
     <Content Include="Images\bombed.png" />
     <Content Include="Images\closed.png" />
     <Content Include="Images\flaged.png" />
+    <None Include="Images\icon.png" />
     <Content Include="Images\nobomb.png" />
     <Content Include="Images\num1.png" />
     <Content Include="Images\num2.png" />

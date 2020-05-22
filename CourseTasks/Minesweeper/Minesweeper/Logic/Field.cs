@@ -2,27 +2,37 @@
 
 namespace Minesweeper.Logic
 {
-    internal class Field
+    class Field
     {
-        public int ColumnsCount { get; }
+        public enum GameStatus
+        {
+            Play,
+            Win,
+            Lose
+        }
+
+        public int ColumsCount { get; }
         public int RowsCount { get; }
         public int MinesCount { get; }
-        public int[,] Cells { get; }
-        private int statusGame;
+        public Cell[,] Cells { get; }
+        private GameStatus currentGameStatus;
+        public bool firstTurn;
 
         public Field(int columsCount, int rowsCount, int minesCount)
         {
             MinesCount = minesCount;
-            ColumnsCount = columsCount;
+            ColumsCount = columsCount;
             RowsCount = rowsCount;
+            firstTurn = false;
+            currentGameStatus = GameStatus.Play;
 
-            Cells = new int[ColumnsCount, RowsCount];
+            Cells = new Cell[ColumsCount, RowsCount];
 
-            for (int i = 0; i < ColumnsCount; i++)
+            for (int i = 0; i < ColumsCount; i++)
             {
                 for (int j = 0; j < RowsCount; j++)
                 {
-                    Cells[i, j] = 1;
+                    Cells[i, j] = new Cell();
                 }
             }
 
@@ -30,104 +40,77 @@ namespace Minesweeper.Logic
 
             for (int i = 0; i < MinesCount; i++)
             {
-                int randomNumberColum = randomNumber.Next(ColumnsCount);
-                int randomNumberRow = randomNumber.Next(RowsCount);
+                int randomColum = randomNumber.Next(ColumsCount);
+                int randomRow = randomNumber.Next(RowsCount);
 
-                if (Cells[randomNumberColum, randomNumberRow] == 0)
+                if (Cells[randomColum, randomRow].CurrentCellMean == Cell.Mean.Bomb)
                 {
                     i--;
                 }
 
-                Cells[randomNumberColum, randomNumberRow] = 0;
+                Cells[randomColum, randomRow].CurrentCellMean = Cell.Mean.Bomb;
 
             }
 
-            for (int i = 0; i < ColumnsCount; i++)
+            for (int i = 0; i < ColumsCount; i++)
             {
                 for (int j = 0; j < RowsCount; j++)
                 {
-                    if (Cells[i, j] != 0)
+                    if (Cells[i, j].CurrentCellMean == Cell.Mean.Bomb)
                     {
-                        int countNeabyMine = 1;
-
-                        if (i - 1 >= 0 && Cells[i - 1, j] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (i + 1 < ColumnsCount && Cells[i + 1, j] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (j - 1 >= 0 && Cells[i, j - 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (j + 1 < RowsCount && Cells[i, j + 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (i - 1 >= 0 && j - 1 >= 0 && Cells[i - 1, j - 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (i + 1 < ColumnsCount && j - 1 >= 0 && Cells[i + 1, j - 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (i - 1 >= 0 && j + 1 < RowsCount && Cells[i - 1, j + 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        if (i + 1 < ColumnsCount && j + 1 < RowsCount && Cells[i + 1, j + 1] == 0)
-                        {
-                            countNeabyMine++;
-                        }
-
-                        Cells[i, j] = countNeabyMine;
+                        continue;
                     }
+
+                    int nearbyMinesCount = 1;
+
+                    for (int p = i - 1; p <= i + 1; p++)
+                    {
+                        for (int k = j - 1; k <= j + 1; k++)
+                        {
+                            if (p >= 0 && k >= 0 && p < ColumsCount && k < RowsCount && !(p == i && k == j) && Cells[p, k].CurrentCellMean == Cell.Mean.Bomb)
+                            {
+                                nearbyMinesCount++;
+                            }
+                        }
+                    }
+
+                    Cells[i, j].CurrentCellMean = (Cell.Mean)nearbyMinesCount;
                 }
             }
         }
 
         private void OpenAllField()
         {
-            foreach (int cell in Cells)
+            foreach (Cell cell in Cells)
             {
-                if (cell > 0)
+                if (cell.CurrentCellStatus != Cell.Status.Open && cell.CurrentCellMean != Cell.Mean.Bomb)
                 {
                     return;
                 }
             }
 
-            statusGame = 2;
+            currentGameStatus = GameStatus.Win;
         }
 
         public void OpenCell(int columNumber, int rowNumber)
         {
-            if (Cells[columNumber, rowNumber] == 0)
+            if (Cells[columNumber, rowNumber].CurrentCellStatus == Cell.Status.Close)
             {
-                statusGame = 1;
-                return;
-            }
+                Cells[columNumber, rowNumber].CurrentCellStatus = Cell.Status.Open;
 
-            if (Cells[columNumber, rowNumber] > 0)
-            {
-                Cells[columNumber, rowNumber] = -Cells[columNumber, rowNumber];
-
-                if (Cells[columNumber, rowNumber] == -1)
+                if (Cells[columNumber, rowNumber].CurrentCellMean == Cell.Mean.Bomb)
                 {
-                    for (int i = 0; i < ColumnsCount; i++)
+                    currentGameStatus = GameStatus.Lose;
+                    return;
+                }
+
+                if (Cells[columNumber, rowNumber].CurrentCellMean == Cell.Mean.Zero)
+                {
+                    for (int i = 0; i < ColumsCount; i++)
                     {
                         for (int j = 0; j < RowsCount; j++)
                         {
-                            if (Math.Abs(columNumber - i) <= 1 && Math.Abs(rowNumber - j) <= 1 && Cells[i, j] > 0)
+                            if (Math.Abs(columNumber - i) <= 1 && Math.Abs(rowNumber - j) <= 1 && Cells[i, j].CurrentCellStatus == Cell.Status.Close)
                             {
                                 OpenCell(i, j);
                             }
@@ -139,9 +122,66 @@ namespace Minesweeper.Logic
             OpenAllField();
         }
 
-        public int GetStatusGame()
+        public GameStatus GetStatusGame()
         {
-            return statusGame;
+            return currentGameStatus;
+        }
+
+        public void RebuildField()
+        {
+            firstTurn = false;
+            currentGameStatus = Field.GameStatus.Play;
+
+            for (int i = 0; i < ColumsCount; i++)
+            {
+                for (int j = 0; j < RowsCount; j++)
+                {
+                    Cells[i, j].CurrentCellStatus = Cell.Status.Close;
+                    Cells[i, j].CurrentCellMean = Cell.Mean.Zero;
+                }
+            }
+
+            Random randomNumber = new Random();
+
+            for (int i = 0; i < MinesCount; i++)
+            {
+                int randomColum = randomNumber.Next(ColumsCount);
+                int randomRow = randomNumber.Next(RowsCount);
+
+                if (Cells[randomColum, randomRow].CurrentCellMean == Cell.Mean.Bomb)
+                {
+                    i--;
+                }
+
+                Cells[randomColum, randomRow].CurrentCellMean = Cell.Mean.Bomb;
+
+            }
+
+            for (int i = 0; i < ColumsCount; i++)
+            {
+                for (int j = 0; j < RowsCount; j++)
+                {
+                    if (Cells[i, j].CurrentCellMean == Cell.Mean.Bomb)
+                    {
+                        continue;
+                    }
+
+                    int nearbyMinesCount = 1;
+
+                    for (int p = i - 1; p <= i + 1; p++)
+                    {
+                        for (int k = j - 1; k <= j + 1; k++)
+                        {
+                            if (p >= 0 && k >= 0 && p < ColumsCount && k < RowsCount && !(p == i && k == j) && Cells[p, k].CurrentCellMean == Cell.Mean.Bomb)
+                            {
+                                nearbyMinesCount++;
+                            }
+                        }
+                    }
+
+                    Cells[i, j].CurrentCellMean = (Cell.Mean)nearbyMinesCount;
+                }
+            }
         }
     }
 }

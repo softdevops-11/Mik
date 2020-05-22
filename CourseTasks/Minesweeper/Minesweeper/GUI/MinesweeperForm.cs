@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using Minesweeper.Logic;
 
@@ -10,8 +9,8 @@ namespace Minesweeper.GUI
 {
     public partial class MinesweeperForm : Form
     {
-        private HightScoresForm hightScoresForm;
-        public static List<HightScores> hs = new List<HightScores>();
+        private HighScoresForm highScoresForm;
+        public static List<HighScores> hs = new List<HighScores>();
         public int columsCount = 9;
         public int rowsCount = 9;
         public int minesCount = 10;
@@ -42,24 +41,24 @@ namespace Minesweeper.GUI
             {
                 Parent = this,
                 Location = new Point(0, 27),
-                Size = new Size(20 * field.ColumnsCount, 20 * field.RowsCount),
-                ColumnCount = field.ColumnsCount,
+                Size = new Size(25 * field.ColumsCount, 25 * field.RowsCount),
+                ColumnCount = field.ColumsCount,
                 RowCount = field.RowsCount,
                 Margin = new Padding(1)
             };
 
-            for (int i = 0; i < field.ColumnsCount; ++i)
+            for (int i = 0; i < field.ColumsCount; ++i)
             {
                 for (int j = 0; j < field.RowsCount; ++j)
                 {
                     FieldButton button = new FieldButton(table, field, i, j)
                     {
                         Margin = new Padding(1),
-                        Width = 18,
-                        Height = 18,
-                        Location = new Point(j * 20, i * 20),
+                        Width = 23,
+                        Height = 23,
+                        Location = new Point(j * 25, i * 25),
                         FlatStyle = FlatStyle.Flat,
-                        BackgroundImage = ((Image)(Properties.Resources.closed)),
+                        BackgroundImage = Properties.Resources.closed,
                         BackgroundImageLayout = ImageLayout.Zoom,
                         ForeColor = SystemColors.Control
                     };
@@ -67,7 +66,7 @@ namespace Minesweeper.GUI
                 }
             }
 
-            Size = new Size(20 * field.ColumnsCount + 17, 20 * field.RowsCount + 85);
+            Size = new Size(25 * field.ColumsCount + 17, 25 * field.RowsCount + 85);
             labelTime.Location = new Point(1, Height - 55);
         }
 
@@ -84,7 +83,7 @@ namespace Minesweeper.GUI
         private void Options_Click(object sender, EventArgs e)
         {
             OptionsForm optionsForm = new OptionsForm(this);
-            optionsForm.Show();
+            optionsForm.ShowDialog();
         }
 
         private void NewGame_Click(object sender, EventArgs e)
@@ -100,17 +99,17 @@ namespace Minesweeper.GUI
             labelTime.Text = string.Format("Время:{0}  Текущее время:{1}", startTime, DateTime.Now.ToString("HH:mm:ss"));
         }
 
-        private void HightScores_Click(object sender, EventArgs e)
+        private void HighScores_Click(object sender, EventArgs e)
         {
-            hightScoresForm = new HightScoresForm(this);
+            highScoresForm = new HighScoresForm(this);
             hs.Sort(new HighScoreComparer());
 
-            foreach (HightScores h in hs)
+            foreach (HighScores h in hs)
             {
-                hightScoresForm.hightScoresBox.Items.Add(h);
+                highScoresForm.highScoresBox.Items.Add(h);
             }
 
-            hightScoresForm.Show();
+            highScoresForm.ShowDialog();
         }
     }
 }

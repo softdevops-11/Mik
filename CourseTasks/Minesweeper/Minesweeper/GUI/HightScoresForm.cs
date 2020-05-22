@@ -2,16 +2,16 @@
 
 namespace Minesweeper.GUI
 {
-    public partial class HightScoresForm : Form
+    public partial class HighScoresForm : Form
     {
         MinesweeperForm minesweeper;
 
-        public HightScoresForm()
+        public HighScoresForm()
         {
             InitializeComponent();
         }
 
-        public HightScoresForm(MinesweeperForm minesweeper)
+        public HighScoresForm(MinesweeperForm minesweeper)
         {
             InitializeComponent();
             this.minesweeper = minesweeper;

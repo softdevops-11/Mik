@@ -5,6 +5,13 @@ namespace Minesweeper.GUI
 {
     public partial class OptionsForm : Form
     {
+        private double percentPossibleMinesCount = 0.3;
+        private int minColumsCount = 9;
+        private int maxColumsCount = 40;
+        private int minRowsCount = 9;
+        private int maxRowsCount = 40;
+        private int minMinesCount = 0;
+        private int maxMinesCount = 99;
         MinesweeperForm minesweeper;
 
         public OptionsForm()
@@ -22,11 +29,19 @@ namespace Minesweeper.GUI
         {
             bool notError = true;
 
-            bool isNumber = int.TryParse(textBoxColums.Text, out int columsCount);
+            bool isNumber = int.TryParse(textBoxColums.Text, out var columsCount);
 
             if (isNumber)
             {
-                minesweeper.columsCount = columsCount;
+                if (columsCount < minColumsCount || columsCount > maxColumsCount)
+                {
+                    MessageBox.Show("Неверный размер поля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    notError = false;
+                }
+                else
+                {
+                    minesweeper.columsCount = columsCount;
+                }
             }
             else
             {
@@ -34,11 +49,19 @@ namespace Minesweeper.GUI
                 notError = false;
             }
 
-            isNumber = int.TryParse(textBoxRows.Text, out int rowsCount);
+            isNumber = int.TryParse(textBoxRows.Text, out var rowsCount);
 
             if (isNumber)
             {
-                minesweeper.rowsCount = rowsCount;
+                if ((rowsCount < minRowsCount || rowsCount > maxRowsCount) && notError)
+                {
+                    MessageBox.Show("Неверный размер поля", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    notError = false;
+                }
+                else
+                {
+                    minesweeper.rowsCount = rowsCount;
+                }
             }
             else
             {
@@ -46,11 +69,19 @@ namespace Minesweeper.GUI
                 notError = false;
             }
 
-            isNumber = int.TryParse(textBoxMines.Text, out int minesCount);
+            isNumber = int.TryParse(textBoxMines.Text, out var minesCount);
 
             if (isNumber)
             {
-                minesweeper.minesCount = minesCount;
+                if ((minesCount < minMinesCount || minesCount > maxMinesCount || minesCount > (int)(rowsCount * columsCount * percentPossibleMinesCount)) && notError)
+                {
+                    MessageBox.Show("Слишком большое количество мин или не в пределах интервала", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    notError = false;
+                }
+                else
+                {
+                    minesweeper.minesCount = minesCount;
+                }
             }
             else
             {

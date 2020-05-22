@@ -1,6 +1,6 @@
 ﻿namespace Minesweeper.GUI
 {
-    partial class HightScoresForm
+    partial class HighScoresForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,28 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.hightScoresBox = new System.Windows.Forms.ListBox();
+            this.highScoresBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
-            // hightScoresBox
+            // highScoresBox
             // 
-            this.hightScoresBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hightScoresBox.Enabled = false;
-            this.hightScoresBox.FormattingEnabled = true;
-            this.hightScoresBox.Location = new System.Drawing.Point(0, 0);
-            this.hightScoresBox.Name = "hightScoresBox";
-            this.hightScoresBox.Size = new System.Drawing.Size(235, 245);
-            this.hightScoresBox.TabIndex = 0;
+            this.highScoresBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.highScoresBox.Enabled = false;
+            this.highScoresBox.FormattingEnabled = true;
+            this.highScoresBox.Location = new System.Drawing.Point(0, 0);
+            this.highScoresBox.Name = "highScoresBox";
+            this.highScoresBox.Size = new System.Drawing.Size(235, 245);
+            this.highScoresBox.TabIndex = 0;
             // 
-            // HightScoresForm
+            // HighScoresForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(235, 245);
-            this.Controls.Add(this.hightScoresBox);
+            this.Controls.Add(this.highScoresBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "HightScoresForm";
+            this.Name = "HighScoresForm";
             this.Text = "Таблица рекордов";
             this.ResumeLayout(false);
 
@@ -57,6 +57,6 @@
 
         #endregion
 
-        public System.Windows.Forms.ListBox hightScoresBox;
+        public System.Windows.Forms.ListBox highScoresBox;
     }
 }

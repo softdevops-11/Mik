@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MinesweeperForm));
             this.menu = new System.Windows.Forms.MenuStrip();
             this.ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.Options = new System.Windows.Forms.ToolStripMenuItem();
-            this.HightScores = new System.Windows.Forms.ToolStripMenuItem();
+            this.HighScores = new System.Windows.Forms.ToolStripMenuItem();
             this.Exit = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.About = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +57,7 @@
             this.ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.NewGame,
             this.Options,
-            this.HightScores,
+            this.HighScores,
             this.Exit});
             this.ToolStripMenuItem.Name = "ToolStripMenuItem";
             this.ToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
@@ -65,28 +66,32 @@
             // NewGame
             // 
             this.NewGame.Name = "NewGame";
-            this.NewGame.Size = new System.Drawing.Size(176, 22);
+            this.NewGame.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.N)));
+            this.NewGame.Size = new System.Drawing.Size(215, 22);
             this.NewGame.Text = "Новая игра";
             this.NewGame.Click += new System.EventHandler(this.NewGame_Click);
             // 
             // Options
             // 
             this.Options.Name = "Options";
-            this.Options.Size = new System.Drawing.Size(176, 22);
+            this.Options.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
+            this.Options.Size = new System.Drawing.Size(215, 22);
             this.Options.Text = "Параметры";
             this.Options.Click += new System.EventHandler(this.Options_Click);
             // 
-            // HightScores
+            // HighScores
             // 
-            this.HightScores.Name = "HightScores";
-            this.HightScores.Size = new System.Drawing.Size(180, 22);
-            this.HightScores.Text = "Таблица рекордов";
-            this.HightScores.Click += new System.EventHandler(this.HightScores_Click);
+            this.HighScores.Name = "HighScores";
+            this.HighScores.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.HighScores.Size = new System.Drawing.Size(215, 22);
+            this.HighScores.Text = "Таблица рекордов";
+            this.HighScores.Click += new System.EventHandler(this.HighScores_Click);
             // 
             // Exit
             // 
             this.Exit.Name = "Exit";
-            this.Exit.Size = new System.Drawing.Size(176, 22);
+            this.Exit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
+            this.Exit.Size = new System.Drawing.Size(215, 22);
             this.Exit.Text = "Выход";
             this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
@@ -101,7 +106,8 @@
             // About
             // 
             this.About.Name = "About";
-            this.About.Size = new System.Drawing.Size(149, 22);
+            this.About.ShortcutKeys = System.Windows.Forms.Keys.F1;
+            this.About.Size = new System.Drawing.Size(168, 22);
             this.About.Text = "О программе";
             this.About.Click += new System.EventHandler(this.About_Click);
             // 
@@ -122,6 +128,7 @@
             this.Controls.Add(this.labelTime);
             this.Controls.Add(this.menu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menu;
             this.MaximizeBox = false;
             this.Name = "MinesweeperForm";
@@ -139,7 +146,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem NewGame;
         private System.Windows.Forms.ToolStripMenuItem Options;
-        private System.Windows.Forms.ToolStripMenuItem HightScores;
+        private System.Windows.Forms.ToolStripMenuItem HighScores;
         private System.Windows.Forms.ToolStripMenuItem Exit;
         private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem About;
