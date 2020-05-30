@@ -7,12 +7,12 @@ namespace Minesweeper.GUI
     {
         private double percentPossibleMinesCount = 0.3;
         private int minColumsCount = 9;
-        private int maxColumsCount = 40;
+        private int maxColumsCount = 30;
         private int minRowsCount = 9;
-        private int maxRowsCount = 40;
+        private int maxRowsCount = 30;
         private int minMinesCount = 0;
         private int maxMinesCount = 99;
-        MinesweeperForm minesweeper;
+        private MinesweeperForm minesweeper;
 
         public OptionsForm()
         {
@@ -25,7 +25,7 @@ namespace Minesweeper.GUI
             this.minesweeper = minesweeper;
         }
 
-        private void buttonOk_Click(object sender, EventArgs e)
+        private void ButtonOk_Click(object sender, EventArgs e)
         {
             bool notError = true;
 
@@ -40,7 +40,7 @@ namespace Minesweeper.GUI
                 }
                 else
                 {
-                    minesweeper.columsCount = columsCount;
+                    minesweeper.SetColumnsCount(columsCount);
                 }
             }
             else
@@ -60,7 +60,7 @@ namespace Minesweeper.GUI
                 }
                 else
                 {
-                    minesweeper.rowsCount = rowsCount;
+                    minesweeper.SetRowsCount(rowsCount);
                 }
             }
             else
@@ -80,7 +80,7 @@ namespace Minesweeper.GUI
                 }
                 else
                 {
-                    minesweeper.minesCount = minesCount;
+                    minesweeper.SetMinesCount(minesCount);
                 }
             }
             else
@@ -91,7 +91,7 @@ namespace Minesweeper.GUI
 
             if (notError)
             {
-                minesweeper.table.Parent = null;
+                minesweeper.GetTable().Parent = null;
                 minesweeper.NewGames();
                 Close();
             }

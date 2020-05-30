@@ -4,7 +4,7 @@ namespace Minesweeper.GUI
 {
     public partial class HighScoresForm : Form
     {
-        MinesweeperForm minesweeper;
+        private MinesweeperForm minesweeper;
 
         public HighScoresForm()
         {

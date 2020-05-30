@@ -49,11 +49,11 @@
     <Compile Include="GUI\FieldButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\HightScoresForm.cs">
+    <Compile Include="GUI\HighScoresForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\HightScoresForm.Designer.cs">
-      <DependentUpon>HightScoresForm.cs</DependentUpon>
+    <Compile Include="GUI\HighScoresForm.Designer.cs">
+      <DependentUpon>HighScoresForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\OptionsForm.cs">
       <SubType>Form</SubType>
@@ -69,12 +69,13 @@
     <Compile Include="GUI\MinesweeperForm.Designer.cs">
       <DependentUpon>MinesweeperForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\GameStatus.cs" />
     <Compile Include="Logic\HighScoreComparer.cs" />
     <Compile Include="Logic\HighScores.cs" />
     <Compile Include="MinesweeperProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="GUI\HightScoresForm.resx">
-      <DependentUpon>HightScoresForm.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\HighScoresForm.resx">
+      <DependentUpon>HighScoresForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\MinesweeperForm.resx">
       <DependentUpon>MinesweeperForm.cs</DependentUpon>

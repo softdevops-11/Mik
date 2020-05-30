@@ -4,22 +4,20 @@ using System.Drawing;
 using System.Windows.Forms;
 using Minesweeper.Logic;
 
-
 namespace Minesweeper.GUI
 {
     public partial class MinesweeperForm : Form
     {
         private HighScoresForm highScoresForm;
-        public static List<HighScores> hs = new List<HighScores>();
-        public int columsCount = 9;
-        public int rowsCount = 9;
-        public int minesCount = 10;
-        public TableLayoutPanel table;
+        private static List<HighScores> highScores = new List<HighScores>();
+        private int columnsCount = 9;
+        private int rowsCount = 9;
+        private int minesCount = 10;
+        private TableLayoutPanel table;
         private Field field;
-        public static Timer timer;
-        public static int startTime;
-        public static string date;
-
+        private static Timer timer;
+        private static int startTime;
+        private static string date;
 
         public MinesweeperForm()
         {
@@ -32,26 +30,26 @@ namespace Minesweeper.GUI
 
         public void NewGames()
         {
-            MinesweeperForm.timer.Stop();
-            MinesweeperForm.timer.Enabled = false;
+            timer.Stop();
+            timer.Enabled = false;
             labelTime.Text = string.Format("Время:");
             startTime = 0;
-            field = new Field(columsCount, rowsCount, minesCount);
+            field = new Field(columnsCount, rowsCount, minesCount);
             table = new TableLayoutPanel
             {
                 Parent = this,
                 Location = new Point(0, 27),
-                Size = new Size(25 * field.ColumsCount, 25 * field.RowsCount),
-                ColumnCount = field.ColumsCount,
-                RowCount = field.RowsCount,
+                Size = new Size(25 * field.GetColumnsCount(), 25 * field.GetRowsCount()),
+                ColumnCount = field.GetColumnsCount(),
+                RowCount = field.GetRowsCount(),
                 Margin = new Padding(1)
             };
 
-            for (int i = 0; i < field.ColumsCount; ++i)
+            for (var i = 0; i < field.GetColumnsCount(); ++i)
             {
-                for (int j = 0; j < field.RowsCount; ++j)
+                for (var j = 0; j < field.GetRowsCount(); ++j)
                 {
-                    FieldButton button = new FieldButton(table, field, i, j)
+                    var button = new FieldButton(table, field, i, j)
                     {
                         Margin = new Padding(1),
                         Width = 23,
@@ -66,7 +64,7 @@ namespace Minesweeper.GUI
                 }
             }
 
-            Size = new Size(25 * field.ColumsCount + 17, 25 * field.RowsCount + 85);
+            Size = new Size(25 * field.GetColumnsCount() + 17, 25 * field.GetRowsCount() + 85);
             labelTime.Location = new Point(1, Height - 55);
         }
 
@@ -102,14 +100,69 @@ namespace Minesweeper.GUI
         private void HighScores_Click(object sender, EventArgs e)
         {
             highScoresForm = new HighScoresForm(this);
-            hs.Sort(new HighScoreComparer());
+            highScores.Sort(new HighScoreComparer());
 
-            foreach (HighScores h in hs)
+            foreach (var h in highScores)
             {
                 highScoresForm.highScoresBox.Items.Add(h);
             }
 
             highScoresForm.ShowDialog();
+        }
+
+        public int GetColumnsCount()
+        {
+            return columnsCount;
+        }
+
+        public int GetRowsCount()
+        {
+            return rowsCount;
+        }
+
+        public int GetMinesCount()
+        {
+            return minesCount;
+        }
+
+        public void SetColumnsCount(int columnsCount)
+        {
+            this.columnsCount= columnsCount;
+        }
+
+        public void SetRowsCount(int rowsCount)
+        {
+            this.rowsCount = rowsCount;
+        }
+
+        public void SetMinesCount(int minesCount)
+        {
+            this.minesCount = minesCount;
+        }
+
+        public static Timer GetTimer()
+        {
+            return timer;
+        }
+
+        public static string GetDate()
+        {
+            return date;
+        }
+
+        public static int GetStartTime()
+        {
+            return startTime;
+        }
+
+        public TableLayoutPanel GetTable()
+        {
+            return table;
+        }
+
+        public static List<HighScores> GetHighScores()
+        {
+            return highScores;
         }
     }
 }

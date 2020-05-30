@@ -1,15 +1,29 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using Minesweeper.Logic;
 
 namespace Minesweeper.GUI
 {
     class FieldButton : Button
     {
-        public int i;
-        public int j;
-        public Field field;
-        public TableLayoutPanel table;
+        private readonly int i;
+        private readonly int j;
+        private Field field;
+        private TableLayoutPanel table;
+        private static readonly Dictionary<Cell.Mean, Bitmap> dictionary = new Dictionary<Cell.Mean, Bitmap>()
+        {
+            { Cell.Mean.Bomb, Properties.Resources.bomb},
+            { Cell.Mean.Zero, Properties.Resources.zero},
+            { Cell.Mean.OneBomb, Properties.Resources.num1},
+            { Cell.Mean.TwoBomb, Properties.Resources.num2},
+            { Cell.Mean.ThreeBomb, Properties.Resources.num3},
+            { Cell.Mean.FourBomb, Properties.Resources.num4},
+            { Cell.Mean.FiveBomb, Properties.Resources.num5},
+            { Cell.Mean.SixBomb, Properties.Resources.num6},
+            { Cell.Mean.SevenBomb, Properties.Resources.num7},
+            { Cell.Mean.EightBomb, Properties.Resources.num8},
+        };
 
         public FieldButton(TableLayoutPanel table, Field field, int i, int j)
         {
@@ -21,128 +35,119 @@ namespace Minesweeper.GUI
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            MinesweeperForm.timer.Enabled = true;
-            if (MinesweeperForm.timer.Enabled)
+            MinesweeperForm.GetTimer().Enabled = true;
+            if (MinesweeperForm.GetTimer().Enabled)
             {
-                MinesweeperForm.timer.Start();
+                MinesweeperForm.GetTimer().Start();
             }
 
             if (e.Button == MouseButtons.Right)
             {
-                if (field.Cells[i, j].CurrentCellStatus == Cell.Status.Flaged)
+                if (field.GetCell(i, j).GetStatus() == Cell.Status.Flaged)
                 {
-                    field.Cells[i, j].CurrentCellStatus = Cell.Status.Close;
+                    field.GetCell(i, j).SetStatus(Cell.Status.Close);
                     BackgroundImage = Properties.Resources.closed;
                 }
-                else if (field.Cells[i, j].CurrentCellStatus == Cell.Status.Close)
+                else if (field.GetCell(i, j).GetStatus() == Cell.Status.Close)
                 {
-                    field.Cells[i, j].CurrentCellStatus = Cell.Status.Flaged;
+                    field.GetCell(i, j).SetStatus(Cell.Status.Flaged);
                     BackgroundImage = Properties.Resources.flaged;
                 }
             }
             else
             {
-                field.OpenCell(i, j);
-
-                if (field.Cells[i, j].CurrentCellStatus == Cell.Status.Open)
+                if (field.GetCell(i, j).GetStatus() == Cell.Status.Open)
                 {
-                    if (field.Cells[i, j].CurrentCellMean == Cell.Mean.Zero)
+                    var countFlagedCells = 0;
+
+                    for (var p = i - 1; p <= i + 1; p++)
                     {
-                        int p = 0;
-                        int k = 0;
-
-                        foreach (FieldButton b in table.Controls)
+                        for (var k = j - 1; k <= j + 1; k++)
                         {
-                            if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.Zero && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
+                            if (p >= 0 && k >= 0 && p < field.GetColumnsCount() && k < field.GetRowsCount() && !(p == i && k == j) && field.GetCell(p, k).GetStatus() == Cell.Status.Flaged)
                             {
-                                b.BackgroundImage = Properties.Resources.zero;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.OneBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num1;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.TwoBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num2;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.ThreeBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num3;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.FourBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num4;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.FiveBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num5;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.SixBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num6;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.SevenBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num7;
-                            }
-                            else if (b.field.Cells[p, k].CurrentCellMean == Cell.Mean.EightBomb && b.field.Cells[p, k].CurrentCellStatus == Cell.Status.Open)
-                            {
-                                b.BackgroundImage = Properties.Resources.num8;
-                            }
-
-                            k++;
-
-                            if (k >= field.RowsCount)
-                            {
-                                p++;
-                                k = 0;
+                                countFlagedCells++;
                             }
                         }
                     }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.OneBomb)
+
+                    if ((int)field.GetCell(i, j).GetMean() - 1 == countFlagedCells)
                     {
-                        BackgroundImage = Properties.Resources.num1;
+                        for (var p = i - 1; p <= i + 1; p++)
+                        {
+                            for (var k = j - 1; k <= j + 1; k++)
+                            {
+                                if (p >= 0 && k >= 0 && p < field.GetColumnsCount() && k < field.GetRowsCount() && !(p == i && k == j) && field.GetCell(p, k).GetStatus() == Cell.Status.Close)
+                                {
+                                    field.OpenCell(p, k);
+                                }
+                            }
+                        }
+
+                        var m = 0;
+                        var n = 0;
+
+                        foreach (FieldButton b in table.Controls)
+                        {
+                            if (b.field.GetCell(m, n).GetStatus() == Cell.Status.Open)
+                            {
+                                b.BackgroundImage = dictionary[b.field.GetCell(m, n).GetMean()];
+                            }
+
+                            n++;
+
+                            if (n >= field.GetRowsCount())
+                            {
+                                m++;
+                                n = 0;
+                            }
+                        }
                     }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.TwoBomb)
+                }
+                else if (field.GetCell(i, j).GetStatus() == Cell.Status.Close)
+                {
+                    field.OpenCell(i, j);
+
+                    if (field.GetCell(i, j).GetStatus() == Cell.Status.Open)
                     {
-                        BackgroundImage = Properties.Resources.num2;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.ThreeBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num3;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.FourBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num4;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.FiveBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num5;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.SixBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num6;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.SevenBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num7;
-                    }
-                    else if (field.Cells[i, j].CurrentCellMean == Cell.Mean.EightBomb)
-                    {
-                        BackgroundImage = Properties.Resources.num8;
+                        if (field.GetCell(i, j).GetMean() == Cell.Mean.Zero)
+                        {
+                            var p = 0;
+                            var k = 0;
+
+                            foreach (FieldButton b in table.Controls)
+                            {
+                                if (b.field.GetCell(p, k).GetStatus() == Cell.Status.Open)
+                                {
+                                    b.BackgroundImage = dictionary[b.field.GetCell(p, k).GetMean()];
+                                }
+
+                                k++;
+
+                                if (k >= field.GetRowsCount())
+                                {
+                                    p++;
+                                    k = 0;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            BackgroundImage = dictionary[field.GetCell(i, j).GetMean()];
+                        }
                     }
                 }
 
-                if (field.GetStatusGame() == Field.GameStatus.Lose)
+                if (field.GetStatusGame() == GameStatus.Lose)
                 {
-                    if (field.firstTurn == false)
+                    if (!field.GetFirstTurn())
                     {
                         field.RebuildField();
                         OnMouseDown(e);
                     }
                     else
                     {
-                        if (field.Cells[i, j].CurrentCellMean == Cell.Mean.Bomb)
+                        if (field.GetCell(i, j).GetMean() == Cell.Mean.Bomb)
                         {
                             BackgroundImage = Properties.Resources.bombed;
                         }
@@ -152,27 +157,27 @@ namespace Minesweeper.GUI
                             b.Enabled = false;
                         }
 
-                        MinesweeperForm.timer.Stop();
-                        MinesweeperForm.timer.Enabled = false;
+                        MinesweeperForm.GetTimer().Stop();
+                        MinesweeperForm.GetTimer().Enabled = false;
                         MessageBox.Show("Вы проиграли.", "Поражение");
                     }
                 }
-                else if (field.GetStatusGame() == Field.GameStatus.Win)
+                else if (field.GetStatusGame() == GameStatus.Win)
                 {
                     foreach (FieldButton b in table.Controls)
                     {
                         b.Enabled = false;
                     }
 
-                    MinesweeperForm.timer.Stop();
-                    MinesweeperForm.timer.Enabled = false;
-                    MinesweeperForm.hs.Add(new HighScores(MinesweeperForm.startTime, MinesweeperForm.date));
+                    MinesweeperForm.GetTimer().Stop();
+                    MinesweeperForm.GetTimer().Enabled = false;
+                    MinesweeperForm.GetHighScores().Add(new HighScores(MinesweeperForm.GetStartTime(), MinesweeperForm.GetDate()));
                     MessageBox.Show("Вы выиграли!", "Победа");
                 }
 
-                if (field.firstTurn == false)
+                if (!field.GetFirstTurn())
                 {
-                    field.firstTurn = true;
+                    field.SetFirstTurn(true);
                 }
             }
         }

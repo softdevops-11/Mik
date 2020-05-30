@@ -23,13 +23,33 @@
             EightBomb
         }
 
-        public Status CurrentCellStatus { get; set; }
-        public Mean CurrentCellMean { get; set; }
+        private Status currentCellStatus;
+        private Mean currentCellMean;
 
         public Cell()
         {
-            CurrentCellStatus = Cell.Status.Close;
-            CurrentCellMean = Cell.Mean.Zero;
+            currentCellStatus = Status.Close;
+            currentCellMean = Mean.Zero;
+        }
+
+        public Status GetStatus()
+        {
+            return currentCellStatus;
+        }
+
+        public Mean GetMean()
+        {
+            return currentCellMean;
+        }
+
+        public void SetMean(Mean mean)
+        {
+            currentCellMean = mean;
+        }
+
+        public void SetStatus(Status status)
+        {
+            currentCellStatus = status;
         }
     }
 }

@@ -2,18 +2,23 @@
 {
     public class HighScores
     {
-        public int Time { get; }
-        public string Date { get; }
+        private readonly int time;
+        private readonly string date;
 
         public HighScores(int time, string date)
         {
-            Time = time;
-            Date = date;
+            this.time = time;
+            this.date = date;
         }
 
         public override string ToString()
         {
-            return string.Format("Время:{0}  Текущее время:{1}", Time, Date);
+            return string.Format("Время:{0}  Текущее время:{1}", time, date);
+        }
+
+        public int GetTime()
+        {
+            return time;
         }
     }
 }
